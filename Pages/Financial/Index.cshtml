@@ -1,0 +1,384 @@
+@page
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
+@model PickleballClubManagement.Pages.Financial.IndexModel
+@{
+    ViewData["Title"] = "Quản Lý Tài Chính";
+}
+
+<style>
+    .financial-hero {
+        background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%);
+        color: var(--color-white);
+        padding: 3rem var(--spacing-lg);
+        border-radius: var(--radius-lg);
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(245, 158, 11, 0.2);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .financial-hero-content h1 {
+        font-size: 2.5rem;
+        font-weight: 900;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .financial-hero-content p {
+        margin: 0.5rem 0 0;
+        opacity: 0.95;
+        font-size: 1.1rem;
+    }
+
+    .hero-action {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: var(--color-white);
+        border-radius: var(--radius-lg);
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        border: 1px solid var(--color-gray-200);
+        transition: all var(--transition-base);
+    }
+
+    .stat-card:hover {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        transform: translateY(-4px);
+    }
+
+    .stat-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .stat-label {
+        font-weight: 600;
+        color: var(--color-gray-700);
+        font-size: 0.95rem;
+    }
+
+    .stat-icon {
+        font-size: 1.5rem;
+    }
+
+    .stat-amount {
+        font-size: 1.8rem;
+        font-weight: 900;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-amount.income {
+        color: #10B981;
+    }
+
+    .stat-amount.expense {
+        color: #EF4444;
+    }
+
+    .stat-amount.balance {
+        color: var(--color-primary);
+    }
+
+    .stat-change {
+        font-size: 0.85rem;
+        opacity: 0.7;
+    }
+
+    .warning-banner {
+        background: #FEE2E2;
+        border: 2px solid #FCA5A5;
+        border-radius: var(--radius-md);
+        padding: 1rem;
+        margin-top: 1rem;
+        color: #7F1D1D;
+        font-weight: 600;
+        animation: pulse 1s infinite;
+    }
+
+    .transactions-section {
+        background: var(--color-white);
+        border: 1px solid var(--color-gray-200);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .section-header-bar {
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+        color: var(--color-white);
+        padding: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .section-header-bar h3 {
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: 700;
+    }
+
+    .transactions-table {
+        overflow-x: auto;
+    }
+
+    .transactions-table table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .transactions-table thead {
+        background: var(--color-gray-50);
+        border-bottom: 2px solid var(--color-gray-200);
+    }
+
+    .transactions-table th {
+        padding: 1rem;
+        text-align: left;
+        font-weight: 700;
+        color: var(--color-gray-800);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .transactions-table td {
+        padding: 1.25rem 1rem;
+        border-bottom: 1px solid var(--color-gray-100);
+        font-size: 0.95rem;
+    }
+
+    .transactions-table tbody tr:hover {
+        background: rgba(22, 163, 74, 0.02);
+    }
+
+    .transaction-date {
+        font-weight: 600;
+        color: var(--color-gray-900);
+    }
+
+    .transaction-desc {
+        color: var(--color-gray-700);
+    }
+
+    .transaction-category {
+        display: inline-block;
+        padding: 0.4rem 0.9rem;
+        border-radius: var(--radius-sm);
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .transaction-category.income {
+        background: #DCFCE7;
+        color: #166534;
+    }
+
+    .transaction-category.expense {
+        background: #FEE2E2;
+        color: #991B1B;
+    }
+
+    .transaction-amount {
+        font-weight: 700;
+        font-size: 1rem;
+    }
+
+    .transaction-amount.income {
+        color: #10B981;
+    }
+
+    .transaction-amount.expense {
+        color: #EF4444;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: var(--color-gray-50);
+    }
+
+    .empty-state-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state-text {
+        font-size: 1rem;
+        color: var(--color-gray-600);
+    }
+
+    @@keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+    }
+
+    @@media (max-width: 1024px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .financial-hero {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .hero-action {
+            width: 100%;
+            margin-top: 1rem;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .financial-hero-content h1 {
+            font-size: 1.8rem;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .stat-amount {
+            font-size: 1.5rem;
+        }
+
+        .hero-action {
+            flex-direction: column-reverse;
+            width: 100%;
+        }
+
+        .hero-action .btn {
+            width: 100%;
+        }
+
+        .transactions-table {
+            font-size: 0.85rem;
+        }
+
+        .transactions-table th,
+        .transactions-table td {
+            padding: 0.75rem 0.5rem;
+        }
+
+        .section-header-bar {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+    }
+</style>
+
+<div class="financial-hero">
+    <div class="financial-hero-content">
+        <h1>💰 Quản Lý Thu Chi</h1>
+        <p>Theo dõi tài chính câu lạc bộ</p>
+    </div>
+    <div class="hero-action">
+        <a href="/Financial/Create" class="btn btn-secondary">➕ Ghi Nhận Giao Dịch</a>
+    </div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-header">
+            <span class="stat-label">Tổng Thu</span>
+            <span class="stat-icon">📈</span>
+        </div>
+        <div class="stat-amount income">@Model.TotalIncome.ToString("N0") đ</div>
+        <div class="stat-change">Doanh thu từ các hoạt động</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-header">
+            <span class="stat-label">Tổng Chi</span>
+            <span class="stat-icon">📉</span>
+        </div>
+        <div class="stat-amount expense">@Model.TotalExpense.ToString("N0") đ</div>
+        <div class="stat-change">Chi phí và hỗ trợ</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-header">
+            <span class="stat-label">Số Dư Quỹ</span>
+            <span class="stat-icon">💵</span>
+        </div>
+        <div class="stat-amount balance">@Model.CurrentBalance.ToString("N0") đ</div>
+        @if (Model.CurrentBalance < 0)
+        {
+            <div class="warning-banner">⚠️ QUỸ ÂM!</div>
+        }
+        else
+        {
+            <div class="stat-change">Tổng quỹ còn lại</div>
+        }
+    </div>
+</div>
+
+<div class="transactions-section">
+    <div class="section-header-bar">
+        <h3>📜 Lịch Sử Giao Dịch</h3>
+    </div>
+    
+    @if (Model.Transactions.Any())
+    {
+        <div class="transactions-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>📅 Ngày</th>
+                        <th>📝 Nội Dung</th>
+                        <th>🏷️ Danh Mục</th>
+                        <th style="text-align: right;">💵 Số Tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var tran in Model.Transactions)
+                    {
+                        var isIncome = tran.Category?.Type == PickleballClubManagement.Models.TransactionType.Income;
+                        <tr>
+                            <td>
+                                <span class="transaction-date">@tran.Date.ToString("dd/MM/yyyy")</span>
+                            </td>
+                            <td>
+                                <span class="transaction-desc">@tran.Description</span>
+                            </td>
+                            <td>
+                                <span class="transaction-category @(isIncome ? "income" : "expense")">
+                                    @tran.Category?.Name
+                                </span>
+                            </td>
+                            <td style="text-align: right;">
+                                <span class="transaction-amount @(isIncome ? "income" : "expense")">
+                                    @(isIncome ? "+" : "-") @tran.Amount.ToString("N0") đ
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+            <div class="empty-state-icon">💸</div>
+            <p class="empty-state-text">Chưa có giao dịch nào được ghi nhận</p>
+        </div>
+    }
+</div>

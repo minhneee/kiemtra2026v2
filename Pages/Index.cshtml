@@ -1,0 +1,504 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Trang Chủ";
+}
+
+<style>
+    /* Hero Section - Horizontal Full Width */
+    .hero-banner {
+        background: url('/images/banner-pickleball.jpg') center/cover no-repeat;
+        padding: 6rem 3rem;
+        margin-bottom: 5rem;
+        border-radius: 0;
+        position: relative;
+        overflow: hidden;
+        min-height: 500px;
+    }
+
+    .hero-banner::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(22, 163, 74, 0.75) 0%, rgba(34, 197, 94, 0.75) 100%);
+        z-index: 1;
+    }
+
+    .hero-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+    }
+
+    .hero-text h1 {
+        font-size: 3.5rem;
+        font-weight: 900;
+        color: var(--color-white);
+        margin-bottom: 1.5rem;
+        line-height: 1.2;
+    }
+
+    .hero-text p {
+        font-size: 1.3rem;
+        color: rgba(255, 255, 255, 0.95);
+        margin-bottom: 2rem;
+        line-height: 1.8;
+    }
+
+    .hero-buttons {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .hero-btn {
+        padding: 1rem 2.5rem;
+        font-size: 1.1rem;
+        font-weight: 700;
+        border-radius: var(--radius-md);
+        text-decoration: none;
+        transition: var(--transition-base);
+        display: inline-block;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .hero-btn-primary {
+        background: var(--color-white);
+        color: var(--color-primary);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .hero-btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero-btn-outline {
+        background: transparent;
+        color: var(--color-white);
+        border: 2px solid var(--color-white);
+    }
+
+    .hero-btn-outline:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .hero-stats {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+
+    .hero-stat {
+        background: rgba(255, 255, 255, 0.15);
+        padding: 1.5rem;
+        border-radius: var(--radius-md);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .hero-stat-number {
+        font-size: 2.5rem;
+        font-weight: 900;
+        color: var(--color-white);
+        display: block;
+    }
+
+    .hero-stat-label {
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.8);
+        margin-top: 0.5rem;
+    }
+
+    /* Main Container */
+    .main-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 var(--spacing-lg);
+    }
+
+    /* Section Title */
+    .section-header {
+        text-align: center;
+        margin-bottom: 4rem;
+    }
+
+    .section-header h2 {
+        font-size: 2.8rem;
+        font-weight: 900;
+        color: var(--color-gray-900);
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .section-header p {
+        font-size: 1.2rem;
+        color: var(--color-gray-600);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    /* Features - Large Cards */
+    .features-section {
+        margin-bottom: 6rem;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2.5rem;
+    }
+
+    .feature-card {
+        background: var(--color-white);
+        border-radius: var(--radius-lg);
+        padding: 2.5rem;
+        box-shadow: var(--shadow-md);
+        transition: all var(--transition-base);
+        border: 2px solid transparent;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: var(--gradient-primary);
+    }
+
+    .feature-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--color-primary);
+    }
+
+    .feature-icon {
+        font-size: 3.5rem;
+        margin-bottom: 1.5rem;
+        display: block;
+    }
+
+    .feature-title {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--color-gray-900);
+        margin-bottom: 1rem;
+    }
+
+    .feature-text {
+        color: var(--color-gray-600);
+        font-size: 1rem;
+        line-height: 1.7;
+        margin-bottom: 2rem;
+    }
+
+    .feature-btn {
+        display: inline-block;
+        background: var(--gradient-primary);
+        color: var(--color-white);
+        padding: 0.8rem 2rem;
+        border-radius: var(--radius-md);
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.95rem;
+        transition: var(--transition-base);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .feature-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    /* Welcome Message for Not Authenticated */
+    .welcome-hero {
+        background: var(--color-white);
+        border-radius: var(--radius-lg);
+        padding: 4rem;
+        text-align: center;
+        margin-bottom: 4rem;
+        box-shadow: var(--shadow-md);
+    }
+
+    .welcome-hero h2 {
+        font-size: 2.5rem;
+        font-weight: 900;
+        color: var(--color-gray-900);
+        margin-bottom: 1.5rem;
+    }
+
+    .welcome-hero p {
+        font-size: 1.2rem;
+        color: var(--color-gray-600);
+        max-width: 700px;
+        margin: 0 auto 2.5rem;
+        line-height: 1.8;
+    }
+
+    .cta-group {
+        display: flex;
+        gap: 1.5rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .cta-btn {
+        padding: 1.2rem 3rem;
+        font-size: 1.1rem;
+        font-weight: 700;
+        border-radius: var(--radius-md);
+        text-decoration: none;
+        transition: var(--transition-base);
+        display: inline-block;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .cta-btn-primary {
+        background: var(--gradient-primary);
+        color: var(--color-white);
+        box-shadow: var(--shadow-md);
+    }
+
+    .cta-btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .cta-btn-secondary {
+        background: var(--color-white);
+        color: var(--color-primary);
+        border: 2px solid var(--color-primary);
+    }
+
+    .cta-btn-secondary:hover {
+        background: var(--color-primary);
+        color: var(--color-white);
+    }
+
+    /* Stats Grid - Larger in hero */
+    .stats-showcase {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        margin: 5rem 0;
+    }
+
+    .stat-box {
+        background: var(--color-white);
+        padding: 2rem;
+        border-radius: var(--radius-lg);
+        text-align: center;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--color-gray-200);
+    }
+
+    .stat-number {
+        font-size: 3rem;
+        font-weight: 900;
+        color: var(--color-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        font-size: 1rem;
+        color: var(--color-gray-600);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    @@media (max-width: 768px) {
+        .hero-content {
+            grid-template-columns: 1fr;
+        }
+
+        .hero-text h1 {
+            font-size: 2.5rem;
+        }
+
+        .hero-text p {
+            font-size: 1.1rem;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+        }
+
+        .features-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <div class="hero-banner">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>⚡ Chào Mừng Quay Lại!</h1>
+                <p>Sẵn sàng nâng cao trình độ pickleball của bạn? Tìm đối thủ, tham gia giải đấu và trở thành tay vợt hàng đầu tại Vợt Thủ Phố Núi.</p>
+                <div class="hero-buttons">
+                    <a href="/Challenges" class="hero-btn hero-btn-primary">🔥 Tìm Kèo Ngay</a>
+                    <a href="/Profile" class="hero-btn hero-btn-outline">👤 Hồ Sơ</a>
+                </div>
+            </div>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="hero-stat-number">@(Model?.TotalMembers ?? 0)</span>
+                    <span class="hero-stat-label">Thành Viên Tham Gia</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-number">@(Model?.ActiveChallenges ?? 0)</span>
+                    <span class="hero-stat-label">Kèo Đang Mở</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-number">@(Model?.TotalMatches ?? 0)</span>
+                    <span class="hero-stat-label">Trận Đấu</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-number">@(Model?.AvailableCourts ?? 0)</span>
+                    <span class="hero-stat-label">Sân Hoạt Động</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <!-- Quick Actions -->
+        <div class="features-section">
+            <div class="section-header">
+                <h2>Bắt Đầu Ngay Hôm Nay</h2>
+                <p>Chọn một trong những tính năng phổ biến dưới đây để tiếp tục hành trình của bạn</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">⚔️</span>
+                    <h3 class="feature-title">Tìm Kèo</h3>
+                    <p class="feature-text">Khám phá các thử thách pickleball hấp dẫn và tìm đối thủ xứng tầm để thử thách bản thân.</p>
+                    <a href="/Challenges" class="feature-btn">Xem Kèo</a>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">📅</span>
+                    <h3 class="feature-title">Đặt Sân</h3>
+                    <p class="feature-text">Đặt lịch sử dụng sân CLB một cách dễ dàng. Chọn thời gian phù hợp và chuẩn bị tập luyện.</p>
+                    <a href="/Bookings/Create" class="feature-btn">Đặt Sân</a>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">📊</span>
+                    <h3 class="feature-title">Lịch Sử Trận Đấu</h3>
+                    <p class="feature-text">Xem lịch sử trận đấu, theo dõi tiến trình và phân tích hiệu suất của bạn qua thời gian.</p>
+                    <a href="/Matches/History" class="feature-btn">Xem Lịch Sử</a>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">👤</span>
+                    <h3 class="feature-title">Quản Lý Hồ Sơ</h3>
+                    <p class="feature-text">Cập nhật thông tin cá nhân, theo dõi rank của bạn và quản lý hoạt động trong CLB.</p>
+                    <a href="/Profile" class="feature-btn">Quản Lý</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="hero-banner">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>🏓 Vợt Thủ Phố Núi</h1>
+                <p>Câu Lạc Bộ Pickleball Hàng Đầu Việt Nam. Tham gia cộng đồng của chúng tôi ngay hôm nay và trở thành một phần của cộng đồng pickleball sôi động nhất!</p>
+                <div class="hero-buttons">
+                    <a href="/Account/Register" class="hero-btn hero-btn-primary">📝 Đăng Ký Ngay</a>
+                    <a href="/Account/Login" class="hero-btn hero-btn-outline">🔓 Đăng Nhập</a>
+                </div>
+            </div>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="hero-stat-number">@(Model?.TotalMembers ?? 0)k+</span>
+                    <span class="hero-stat-label">Thành Viên</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-number">24/7</span>
+                    <span class="hero-stat-label">Kết Nối</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-number">@(Model?.TotalMatches ?? 0)+</span>
+                    <span class="hero-stat-label">Trận Đấu</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-number">🏆</span>
+                    <span class="hero-stat-label">Giải Đấu</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="welcome-hero">
+            <h2>Tại Sao Chọn Vợt Thủ Phố Núi?</h2>
+            <p>
+                Chúng tôi là nền tảng hàng đầu kết nối những người chơi pickleball. Dù bạn là người mới bắt đầu hay 
+                một tay vợt chuyên nghiệp, chúng tôi cung cấp mọi thứ bạn cần để phát triển kỹ năng và 
+                xây dựng các mối quan hệ bền vững trong cộng đồng pickleball.
+            </p>
+            <div class="cta-group">
+                <a href="/Account/Register" class="cta-btn cta-btn-primary">📝 Bắt Đầu Hôm Nay</a>
+                <a href="/Account/Login" class="cta-btn cta-btn-secondary">🔓 Tôi Đã Có Tài Khoản</a>
+            </div>
+        </div>
+
+        <div class="features-section">
+            <div class="section-header">
+                <h2>Những Tính Năng Nổi Bật</h2>
+                <p>Khám phá những gì chúng tôi cung cấp cho bạn</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">🏆</span>
+                    <h3 class="feature-title">Giải Đấu Chuyên Nghiệp</h3>
+                    <p class="feature-text">Tham gia các giải đấu pickleball quy mô lớn với hệ thống xếp hạng công bằng và minh bạch.</p>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">🤝</span>
+                    <h3 class="feature-title">Cộng Đồng Vượt Trội</h3>
+                    <p class="feature-text">Kết nối với hàng nghìn người chơi pickleball trên toàn quốc, từ người mới bắt đầu đến chuyên gia.</p>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">📊</span>
+                    <h3 class="feature-title">Thống Kê Chi Tiết</h3>
+                    <p class="feature-text">Theo dõi tiến bộ của bạn qua hệ thống thống kê chi tiết và nhận tư vấn từ các HLV hàng đầu.</p>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">⚡</span>
+                    <h3 class="feature-title">Quản Lý Đơn Giản</h3>
+                    <p class="feature-text">Đặt sân, tìm đối thủ và quản lý hồ sơ của bạn tất cả trong một nền tảng duy nhất.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

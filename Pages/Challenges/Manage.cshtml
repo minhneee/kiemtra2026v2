@@ -1,0 +1,310 @@
+@page
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
+@model PickleballClubManagement.Pages.Challenges.ManageModel
+@{
+    ViewData["Title"] = "Quản Lý Kèo";
+}
+
+<style>
+    .challenge-hero {
+        background: linear-gradient(135deg, #EC4899 0%, #06B6D4 100%);
+        color: var(--color-white);
+        padding: 3rem var(--spacing-lg);
+        border-radius: var(--radius-lg);
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(236, 72, 153, 0.2);
+    }
+
+    .challenge-hero h1 {
+        font-size: 2.5rem;
+        font-weight: 900;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .challenge-hero p {
+        margin: 0.5rem 0 0;
+        opacity: 0.95;
+        font-size: 1.1rem;
+    }
+
+    .filter-tabs {
+        display: flex;
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .filter-btn {
+        background: var(--color-white);
+        border: 2px solid var(--color-gray-300);
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--radius-md);
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all var(--transition-base);
+        white-space: nowrap;
+    }
+
+    .filter-btn:hover {
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+    }
+
+    .filter-btn.active {
+        background: var(--gradient-primary);
+        color: var(--color-white);
+        border-color: var(--color-primary);
+    }
+
+    .challenges-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .challenge-card {
+        background: var(--color-white);
+        border: 1px solid var(--color-gray-200);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        transition: all var(--transition-base);
+    }
+
+    .challenge-card:hover {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        transform: translateY(-4px);
+        border-color: var(--color-primary);
+    }
+
+    .challenge-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--color-gray-100);
+        background: var(--color-gray-50);
+    }
+
+    .challenge-status {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .status-badge {
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius-sm);
+        font-weight: 700;
+        font-size: 0.85rem;
+        white-space: nowrap;
+    }
+
+    .status-open {
+        background: #DBEAFE;
+        color: #1E40AF;
+    }
+
+    .status-accepted {
+        background: #FED7AA;
+        color: #92400E;
+    }
+
+    .status-completed {
+        background: #DCFCE7;
+        color: #166534;
+    }
+
+    .challenge-time {
+        color: var(--color-gray-500);
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    .challenge-body {
+        padding: 1.5rem;
+    }
+
+    .challenge-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin: 0 0 1rem;
+        color: var(--color-gray-900);
+    }
+
+    .creator-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--color-gray-100);
+    }
+
+    .creator-name {
+        font-weight: 600;
+        color: var(--color-gray-800);
+    }
+
+    .creator-rank {
+        background: var(--gradient-primary);
+        color: var(--color-white);
+        padding: 0.3rem 0.75rem;
+        border-radius: var(--radius-sm);
+        font-size: 0.8rem;
+        font-weight: 700;
+    }
+
+    .challenge-description {
+        color: var(--color-gray-700);
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    .challenge-footer {
+        padding: 1rem 1.5rem;
+        background: var(--color-gray-50);
+        border-top: 1px solid var(--color-gray-100);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.85rem;
+        color: var(--color-gray-600);
+    }
+
+    .challenge-id {
+        font-weight: 600;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: var(--color-white);
+        border-radius: var(--radius-lg);
+        border: 2px dashed var(--color-gray-200);
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state-text {
+        font-size: 1.1rem;
+        color: var(--color-gray-600);
+        margin: 0;
+    }
+
+    @@media (max-width: 768px) {
+        .challenge-hero h1 {
+            font-size: 1.8rem;
+        }
+
+        .filter-tabs {
+            gap: 0.5rem;
+        }
+
+        .filter-btn {
+            padding: 0.6rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .challenge-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .challenge-footer {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+    }
+</style>
+
+<div class="challenge-hero">
+    <h1>📋 Quản Lý Kèo Đấu</h1>
+    <p>Quản lý và theo dõi tất cả các kèo đấu trong câu lạc bộ</p>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success" style="margin-bottom: 2rem;">
+        ✅ @TempData["SuccessMessage"]
+    </div>
+}
+
+<div class="filter-tabs">
+    <button class="filter-btn @(Model.FilterStatus == null ? "active" : "")" 
+            onclick="window.location.href='/Challenges/Manage'">
+        📊 Tất Cả (@Model.AllChallenges.Count)
+    </button>
+    <button class="filter-btn @(Model.FilterStatus == ChallengeStatus.Open ? "active" : "")" 
+            onclick="window.location.href='/Challenges/Manage?status=0'">
+        🔵 Đang Mở (@Model.AllChallenges.Count(c => c.Status == ChallengeStatus.Open))
+    </button>
+    <button class="filter-btn @(Model.FilterStatus == ChallengeStatus.Accepted ? "active" : "")" 
+            onclick="window.location.href='/Challenges/Manage?status=1'">
+        🟠 Đã Chốt (@Model.AllChallenges.Count(c => c.Status == ChallengeStatus.Accepted))
+    </button>
+    <button class="filter-btn @(Model.FilterStatus == ChallengeStatus.Completed ? "active" : "")" 
+            onclick="window.location.href='/Challenges/Manage?status=2'">
+        🟢 Hoàn Thành (@Model.AllChallenges.Count(c => c.Status == ChallengeStatus.Completed))
+    </button>
+</div>
+
+@if (Model.Challenges.Any())
+{
+    <div class="challenges-grid">
+        @foreach (var challenge in Model.Challenges)
+        {
+            <div class="challenge-card">
+                <div class="challenge-header">
+                    <div class="challenge-status">
+                        @if (challenge.Status == ChallengeStatus.Open)
+                        {
+                            <span class="status-badge status-open">🔵 Đang Tìm Đối</span>
+                        }
+                        else if (challenge.Status == ChallengeStatus.Accepted)
+                        {
+                            <span class="status-badge status-accepted">🟠 Đã Chốt Kèo</span>
+                        }
+                        else
+                        {
+                            <span class="status-badge status-completed">🟢 Hoàn Thành</span>
+                        }
+                    </div>
+                    <span class="challenge-time">@challenge.CreatedAt.ToString("dd/MM/yyyy HH:mm")</span>
+                </div>
+                
+                <div class="challenge-body">
+                    <h3 class="challenge-title">@challenge.Title</h3>
+                    <div class="creator-info">
+                        <span class="creator-name">👤 @challenge.Creator?.FullName</span>
+                        @if (challenge.Creator != null)
+                        {
+                            <span class="creator-rank">⭐ @challenge.Creator.RankLevel.ToString("F1")</span>
+                        }
+                    </div>
+                    <p class="challenge-description">@challenge.Description</p>
+                </div>
+                
+                <div class="challenge-footer">
+                    <span class="challenge-id">ID: #@challenge.Id</span>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="empty-state">
+        <div class="empty-state-icon">📋</div>
+        <p class="empty-state-text">Không có kèo nào @(Model.FilterStatus.HasValue ? "ở trạng thái này" : "")</p>
+    </div>
+}

@@ -1,0 +1,537 @@
+@page
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+@model PickleballClubManagement.Pages.Profile.IndexModel
+@{
+    ViewData["Title"] = "Hồ Sơ Của Tôi";
+}
+
+<style>
+    .profile-container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .profile-banner {
+        background: linear-gradient(135deg, #1E293B 0%, #334155 50%, var(--color-primary) 100%);
+        color: var(--color-white);
+        padding: 4rem var(--spacing-lg);
+        border-radius: var(--radius-lg);
+        margin-bottom: 3rem;
+        box-shadow: 0 20px 40px rgba(22, 163, 74, 0.15);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .profile-banner::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .profile-banner-content {
+        display: flex;
+        align-items: center;
+        gap: 3rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .profile-avatar-wrapper {
+        flex-shrink: 0;
+        position: relative;
+    }
+
+    .profile-avatar-ring {
+        width: 140px;
+        height: 140px;
+        background: var(--gradient-primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 5rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        border: 4px solid var(--color-white);
+    }
+
+    .profile-info-section {
+        flex: 1;
+    }
+
+    .profile-name {
+        font-size: 2.8rem;
+        font-weight: 900;
+        margin: 0 0 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .profile-email {
+        font-size: 1.05rem;
+        opacity: 0.9;
+        margin: 0 0 1.5rem;
+        letter-spacing: 0.5px;
+    }
+
+    .profile-stats-inline {
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .inline-stat {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .inline-stat-value {
+        font-size: 1.8rem;
+        font-weight: 900;
+    }
+
+    .inline-stat-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+
+    .stat-card {
+        background: var(--color-white);
+        padding: 2rem;
+        border-radius: var(--radius-lg);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        border: 1px solid var(--color-gray-200);
+        transition: all var(--transition-base);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--gradient-primary);
+    }
+
+    .stat-card:nth-child(2)::before {
+        background: linear-gradient(90deg, #10B981, #34D399);
+    }
+
+    .stat-card:nth-child(3)::before {
+        background: linear-gradient(90deg, #EF4444, #F87171);
+    }
+
+    .stat-card:nth-child(4)::before {
+        background: linear-gradient(90deg, #F59E0B, #FBBF24);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+    }
+
+    .stat-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .stat-value {
+        font-size: 2.2rem;
+        font-weight: 900;
+        margin-bottom: 0.5rem;
+        color: var(--color-gray-900);
+    }
+
+    .stat-label {
+        font-size: 0.85rem;
+        color: var(--color-gray-600);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .stat-change {
+        font-size: 0.8rem;
+        margin-top: 0.75rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid var(--color-gray-200);
+        color: var(--color-gray-600);
+    }
+
+    .two-column-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .section-card {
+        background: var(--color-white);
+        border: 1px solid var(--color-gray-200);
+        border-radius: var(--radius-lg);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+    }
+
+    .section-header {
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+        color: var(--color-white);
+        padding: 1.5rem;
+        font-size: 1.2rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .section-body {
+        padding: 2rem;
+    }
+
+    .match-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .match-item {
+        padding: 1.25rem;
+        background: linear-gradient(135deg, var(--color-gray-50) 0%, var(--color-white) 100%);
+        border-radius: var(--radius-md);
+        border-left: 5px solid;
+        transition: all var(--transition-base);
+        cursor: pointer;
+    }
+
+    .match-item:hover {
+        transform: translateX(4px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .match-item.win {
+        border-left-color: #10B981;
+        background: linear-gradient(135deg, #F0FDF4 0%, var(--color-white) 100%);
+    }
+
+    .match-item.loss {
+        border-left-color: #EF4444;
+        background: linear-gradient(135deg, #FEF2F2 0%, var(--color-white) 100%);
+    }
+
+    .match-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .match-type {
+        display: inline-block;
+        padding: 0.35rem 0.75rem;
+        background: var(--color-gray-200);
+        border-radius: var(--radius-sm);
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--color-gray-800);
+    }
+
+    .match-result-badge {
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+
+    .match-result-badge.win {
+        color: #10B981;
+    }
+
+    .match-result-badge.loss {
+        color: #EF4444;
+    }
+
+    .match-meta {
+        font-size: 0.85rem;
+        color: var(--color-gray-600);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        background: var(--color-gray-50);
+        border-radius: var(--radius-md);
+    }
+
+    .empty-state-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state-text {
+        color: var(--color-gray-600);
+        font-size: 1rem;
+        margin: 0;
+    }
+
+    .achievement-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 1rem;
+    }
+
+    .achievement-badge {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        background: linear-gradient(135deg, var(--color-gray-50) 0%, var(--color-white) 100%);
+        border: 2px solid var(--color-gray-200);
+        border-radius: var(--radius-md);
+        transition: all var(--transition-base);
+        text-align: center;
+    }
+
+    .achievement-badge:hover {
+        transform: scale(1.05);
+        border-color: var(--color-primary);
+        box-shadow: 0 4px 12px rgba(22, 163, 74, 0.2);
+    }
+
+    .achievement-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .achievement-name {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--color-gray-800);
+    }
+
+    .btn {
+        padding: 0.85rem 1.5rem;
+        border-radius: var(--radius-md);
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        border: none;
+        transition: all var(--transition-base);
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-primary {
+        background: var(--gradient-primary);
+        color: var(--color-white);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(22, 163, 74, 0.3);
+    }
+
+    .view-all {
+        text-align: center;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--color-gray-200);
+    }
+
+    @@media (max-width: 1024px) {
+        .two-column-section {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .profile-banner {
+            padding: 2rem var(--spacing-lg);
+        }
+
+        .profile-banner-content {
+            flex-direction: column;
+            text-align: center;
+            gap: 1.5rem;
+        }
+
+        .profile-name {
+            font-size: 1.8rem;
+        }
+
+        .profile-stats-inline {
+            justify-content: center;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .achievement-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+</style>
+
+<div class="profile-container">
+    <!-- Profile Banner -->
+    <div class="profile-banner">
+        <div class="profile-banner-content">
+            <div class="profile-avatar-wrapper">
+                <div class="profile-avatar-ring">👤</div>
+            </div>
+            <div class="profile-info-section">
+                <h1 class="profile-name">@Model.Member?.FullName</h1>
+                <p class="profile-email">📧 @Model.Member?.User?.Email</p>
+                <div class="profile-stats-inline">
+                    <div class="inline-stat">
+                        <div class="inline-stat-value">⭐</div>
+                        <div>
+                            <div class="inline-stat-value">@Model.Member?.RankLevel.ToString("F1")</div>
+                            <div class="inline-stat-label">Rank</div>
+                        </div>
+                    </div>
+                    <div class="inline-stat">
+                        <div class="inline-stat-value">🎾</div>
+                        <div>
+                            <div class="inline-stat-value">@Model.TotalMatches</div>
+                            <div class="inline-stat-label">Trận Đấu</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">🎾</div>
+            <div class="stat-value">@Model.TotalMatches</div>
+            <div class="stat-label">Tổng Trận Đấu</div>
+            <div class="stat-change">Tất cả các trận đấu đã ghi nhận</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">🏆</div>
+            <div class="stat-value">@Model.WinCount</div>
+            <div class="stat-label">Trận Thắng</div>
+            <div class="stat-change">@Math.Round((double)Model.WinCount / Math.Max(1, Model.TotalMatches) * 100)% tổng số trận</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">❌</div>
+            <div class="stat-value">@Model.LoseCount</div>
+            <div class="stat-label">Trận Thua</div>
+            <div class="stat-change">@Math.Round((double)Model.LoseCount / Math.Max(1, Model.TotalMatches) * 100)% tổng số trận</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-value">@Model.WinRate.ToString("F1")%</div>
+            <div class="stat-label">Tỷ Lệ Thắng</div>
+            <div class="stat-change">Hiệu suất thi đấu của bạn</div>
+        </div>
+    </div>
+
+    <!-- Recent Matches & Achievements -->
+    <div class="two-column-section">
+        <!-- Recent Matches -->
+        <div class="section-card">
+            <div class="section-header">
+                📜 Trận Đấu Gần Đây
+            </div>
+            
+            <div class="section-body">
+                @if (Model.RecentMatches.Any())
+                {
+                    <div class="match-list">
+                        @foreach (var match in Model.RecentMatches.Take(6))
+                        {
+                            var isWinner = Model.IsWinner(match);
+                            <div class="match-item @(isWinner ? "win" : "loss")">
+                                <div class="match-header">
+                                    <span class="match-type">
+                                        @(match.Format == MatchFormat.Singles ? "🎾 Đơn" : "🎾🎾 Đôi")
+                                    </span>
+                                    <span class="match-result-badge @(isWinner ? "win" : "loss")">
+                                        @(isWinner ? "✅ THẮNG" : "❌ THUA")
+                                    </span>
+                                </div>
+                                <div class="match-meta">
+                                    📅 @match.MatchDate.ToString("dd/MM/yyyy HH:mm")
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    
+                    @if (Model.RecentMatches.Count() > 6)
+                    {
+                        <div class="view-all">
+                            <a href="/Matches/History" class="btn btn-primary">Xem Tất Cả Lịch Sử →</a>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🎾</div>
+                        <p class="empty-state-text">Chưa có trận đấu nào được ghi nhận</p>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Achievements -->
+        <div class="section-card">
+            <div class="section-header">
+                🏅 Thành Tích Nổi Bật
+            </div>
+            
+            <div class="section-body">
+                <div class="achievement-grid">
+                    <div class="achievement-badge">
+                        <div class="achievement-icon">🔥</div>
+                        <div class="achievement-name">Chuỗi Thắng</div>
+                    </div>
+                    <div class="achievement-badge">
+                        <div class="achievement-icon">⭐</div>
+                        <div class="achievement-name">Top Rank</div>
+                    </div>
+                    <div class="achievement-badge">
+                        <div class="achievement-icon">🎯</div>
+                        <div class="achievement-name">Chính Xác</div>
+                    </div>
+                    <div class="achievement-badge">
+                        <div class="achievement-icon">🏆</div>
+                        <div class="achievement-name">Nhà Vô Địch</div>
+                    </div>
+                    <div class="achievement-badge">
+                        <div class="achievement-icon">💪</div>
+                        <div class="achievement-name">Nhất Quán</div>
+                    </div>
+                    <div class="achievement-badge">
+                        <div class="achievement-icon">🌟</div>
+                        <div class="achievement-name">Sáng Giá</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

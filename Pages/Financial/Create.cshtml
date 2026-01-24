@@ -1,0 +1,301 @@
+@page
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
+@model PickleballClubManagement.Pages.Financial.CreateModel
+@{
+    ViewData["Title"] = "Ghi Nhận Giao Dịch";
+}
+
+<style>
+    .financial-create-hero {
+        background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%);
+        color: var(--color-white);
+        padding: 3rem var(--spacing-lg);
+        border-radius: var(--radius-lg);
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(245, 158, 11, 0.2);
+    }
+
+    .financial-create-hero h1 {
+        font-size: 2.5rem;
+        font-weight: 900;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .financial-create-hero p {
+        margin: 0.5rem 0 0;
+        opacity: 0.95;
+        font-size: 1.1rem;
+    }
+
+    .form-container {
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .form-card {
+        background: var(--color-white);
+        border: 1px solid var(--color-gray-200);
+        border-radius: var(--radius-lg);
+        padding: 2rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-section {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-section:last-of-type {
+        margin-bottom: 2rem;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+        color: var(--color-gray-800);
+        font-size: 0.95rem;
+    }
+
+    .form-label .icon {
+        margin-right: 0.5rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.85rem;
+        border: 1px solid var(--color-gray-300);
+        border-radius: var(--radius-md);
+        font-size: 1rem;
+        color: var(--color-gray-900);
+        background: var(--color-white);
+        transition: all var(--transition-base);
+        font-family: inherit;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+    }
+
+    .form-control::placeholder {
+        color: var(--color-gray-500);
+    }
+
+    select.form-control {
+        cursor: pointer;
+    }
+
+    textarea.form-control {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .input-helper {
+        font-size: 0.85rem;
+        color: var(--color-gray-600);
+        margin-top: 0.35rem;
+    }
+
+    .validation-error {
+        color: #DC2626;
+        font-size: 0.85rem;
+        margin-top: 0.35rem;
+        display: block;
+    }
+
+    .form-section.error .form-control {
+        border-color: #DC2626;
+        background-color: #FEE2E2;
+    }
+
+    .alert {
+        padding: 1rem;
+        border-radius: var(--radius-md);
+        margin-bottom: 1.5rem;
+        border-left: 4px solid;
+    }
+
+    .alert-error {
+        background: #FEE2E2;
+        border-color: #DC2626;
+        color: #991B1B;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+        padding-top: 1rem;
+        border-top: 1px solid var(--color-gray-200);
+    }
+
+    .btn {
+        padding: 0.85rem 1.5rem;
+        border-radius: var(--radius-md);
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        border: none;
+        transition: all var(--transition-base);
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-primary {
+        background: var(--gradient-primary);
+        color: var(--color-white);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(22, 163, 74, 0.3);
+    }
+
+    .btn-secondary {
+        background: var(--color-white);
+        color: var(--color-primary);
+        border: 2px solid var(--color-primary);
+    }
+
+    .btn-secondary:hover {
+        background: var(--color-primary);
+        color: var(--color-white);
+    }
+
+    .category-badge {
+        display: inline-block;
+        padding: 0.3rem 0.6rem;
+        border-radius: var(--radius-sm);
+        font-size: 0.75rem;
+        font-weight: 700;
+        margin-left: 0.5rem;
+    }
+
+    .category-income {
+        background: #DCFCE7;
+        color: #166534;
+    }
+
+    .category-expense {
+        background: #FEE2E2;
+        color: #991B1B;
+    }
+
+    @@media (max-width: 768px) {
+        .financial-create-hero h1 {
+            font-size: 1.8rem;
+        }
+
+        .form-card {
+            padding: 1.5rem;
+        }
+
+        .button-group {
+            flex-direction: column-reverse;
+        }
+
+        .button-group .btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="financial-create-hero">
+    <h1>💳 Ghi Nhận Thu/Chi Mới</h1>
+    <p>Thêm một giao dịch mới vào quỹ câu lạc bộ</p>
+</div>
+
+<div class="form-container">
+    <div class="form-card">
+        <form method="post">
+            @{
+                var modelState = ViewData.ModelState;
+                var hasErrors = modelState?.Any(x => x.Value?.Errors.Count > 0) ?? false;
+            }
+
+            @if (hasErrors)
+            {
+                <div class="alert alert-error">
+                    <strong>⚠️ Có lỗi trong biểu mẫu</strong>
+                    <div style="margin-top: 0.5rem; font-size: 0.9rem;">
+                        Vui lòng kiểm tra và sửa các trường được đánh dấu bằng màu đỏ
+                    </div>
+                </div>
+            }
+            
+            <div class="form-section @(modelState?["Input.CategoryId"]?.Errors.Count > 0 ? "error" : "")">
+                <label class="form-label">
+                    <span class="icon">🏷️</span> Loại Giao Dịch
+                </label>
+                <select class="form-control" asp-for="Input.CategoryId">
+                    <option value="">-- Chọn danh mục --</option>
+                    <optgroup label="💸 Khoản Chi">
+                        @foreach (var cat in Model.Categories.Where(c => c.Type == PickleballClubManagement.Models.TransactionType.Expense))
+                        {
+                            <option value="@cat.Id">@cat.Name</option>
+                        }
+                    </optgroup>
+                    <optgroup label="💰 Khoản Thu">
+                        @foreach (var cat in Model.Categories.Where(c => c.Type == PickleballClubManagement.Models.TransactionType.Income))
+                        {
+                            <option value="@cat.Id">@cat.Name</option>
+                        }
+                    </optgroup>
+                </select>
+                @if (modelState?["Input.CategoryId"]?.Errors.FirstOrDefault() != null)
+                {
+                    <span class="validation-error">@modelState["Input.CategoryId"].Errors.First().ErrorMessage</span>
+                }
+            </div>
+
+            <div class="form-section @(modelState?["Input.Amount"]?.Errors.Count > 0 ? "error" : "")">
+                <label class="form-label">
+                    <span class="icon">💵</span> Số Tiền (VNĐ)
+                </label>
+                <input class="form-control" asp-for="Input.Amount" type="number" step="1000" min="0" placeholder="Nhập số tiền" />
+                <div class="input-helper">Tối thiểu 1.000 đ, tăng theo bước 1.000 đ</div>
+                @if (modelState?["Input.Amount"]?.Errors.FirstOrDefault() != null)
+                {
+                    <span class="validation-error">@modelState["Input.Amount"].Errors.First().ErrorMessage</span>
+                }
+            </div>
+            
+            <div class="form-section @(modelState?["Input.Date"]?.Errors.Count > 0 ? "error" : "")">
+                <label class="form-label">
+                    <span class="icon">📅</span> Ngày Giao Dịch
+                </label>
+                <input class="form-control" asp-for="Input.Date" type="date" />
+                @if (modelState?["Input.Date"]?.Errors.FirstOrDefault() != null)
+                {
+                    <span class="validation-error">@modelState["Input.Date"].Errors.First().ErrorMessage</span>
+                }
+            </div>
+
+            <div class="form-section @(modelState?["Input.Description"]?.Errors.Count > 0 ? "error" : "")">
+                <label class="form-label">
+                    <span class="icon">📝</span> Mô Tả Chi Tiết
+                </label>
+                <textarea class="form-control" asp-for="Input.Description" placeholder="Ví dụ: Mua 10 hộp bóng, Thu tiền sân nhóm anh A..."></textarea>
+                <div class="input-helper">Nhập chi tiết về giao dịch để dễ quản lý</div>
+                @if (modelState?["Input.Description"]?.Errors.FirstOrDefault() != null)
+                {
+                    <span class="validation-error">@modelState["Input.Description"].Errors.First().ErrorMessage</span>
+                }
+            </div>
+
+            <div class="button-group">
+                <a href="/Financial/Index" class="btn btn-secondary">↩️ Hủy</a>
+                <button type="submit" class="btn btn-primary">💾 Lưu Giao Dịch</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

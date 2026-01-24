@@ -1,0 +1,334 @@
+@page
+@model PickleballClubManagement.Pages.Matches.HistoryModel
+@{
+    ViewData["Title"] = "Lịch Sử Thi Đấu";
+}
+
+<style>
+    .history-hero {
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+        color: var(--color-white);
+        padding: 3rem var(--spacing-lg);
+        border-radius: var(--radius-lg);
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(22, 163, 74, 0.2);
+    }
+
+    .history-hero h1 {
+        font-size: 2.5rem;
+        font-weight: 900;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .history-hero p {
+        margin: 0.5rem 0 0;
+        opacity: 0.95;
+        font-size: 1.1rem;
+    }
+
+    .matches-list {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .match-card {
+        background: var(--color-white);
+        border: 1px solid var(--color-gray-200);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        transition: all var(--transition-base);
+    }
+
+    .match-card:hover {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .match-header {
+        padding: 1.5rem;
+        background: var(--color-gray-50);
+        border-bottom: 1px solid var(--color-gray-200);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .match-badges {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius-sm);
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+
+    .badge-format {
+        background: #DBEAFE;
+        color: #1E40AF;
+    }
+
+    .badge-challenge {
+        background: #FEE2E2;
+        color: #991B1B;
+    }
+
+    .match-time {
+        color: var(--color-gray-600);
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .match-body {
+        padding: 2rem;
+    }
+
+    .match-teams {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 2rem;
+        align-items: center;
+    }
+
+    .team {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .team.winner {
+        border-left: 4px solid #10B981;
+        padding-left: 1rem;
+    }
+
+    .team.loser {
+        border-left: 4px solid #EF4444;
+        padding-left: 1rem;
+    }
+
+    .team-header {
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .team.winner .team-header {
+        color: #10B981;
+    }
+
+    .team.loser .team-header {
+        color: #EF4444;
+    }
+
+    .player {
+        font-weight: 600;
+        color: var(--color-gray-900);
+        font-size: 1rem;
+    }
+
+    .player-rank {
+        color: var(--color-gray-600);
+        font-size: 0.85rem;
+        margin-top: 0.25rem;
+    }
+
+    .vs-divider {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .vs-text {
+        font-weight: 900;
+        font-size: 1.3rem;
+        color: var(--color-primary);
+    }
+
+    .match-footer {
+        padding: 1rem 2rem;
+        background: var(--color-gray-50);
+        border-top: 1px solid var(--color-gray-200);
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .badge-rank {
+        background: #FEF3C7;
+        color: #92400E;
+        padding: 0.4rem 0.8rem;
+        border-radius: var(--radius-sm);
+        font-size: 0.8rem;
+        font-weight: 700;
+    }
+
+    .badge-no-rank {
+        background: #E5E7EB;
+        color: #6B7280;
+        padding: 0.4rem 0.8rem;
+        border-radius: var(--radius-sm);
+        font-size: 0.8rem;
+        font-weight: 700;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: var(--color-white);
+        border-radius: var(--radius-lg);
+        border: 2px dashed var(--color-gray-200);
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state-text {
+        font-size: 1.1rem;
+        color: var(--color-gray-600);
+        margin: 0;
+    }
+
+    .match-challenge {
+        padding: 0.75rem 0;
+        color: var(--color-gray-700);
+        font-size: 0.9rem;
+        border-top: 1px solid var(--color-gray-100);
+        margin-top: 1rem;
+    }
+
+    @@media (max-width: 768px) {
+        .history-hero h1 {
+            font-size: 1.8rem;
+        }
+
+        .match-teams {
+            grid-template-columns: 1fr;
+        }
+
+        .vs-divider {
+            flex-direction: row;
+            padding: 1rem 0;
+        }
+
+        .match-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+</style>
+
+<div class="history-hero">
+    <h1>📜 Lịch Sử Thi Đấu</h1>
+    <p>Xem lại tất cả các trận đấu đã ghi nhận</p>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success" style="margin-bottom: 2rem;">
+        ✅ @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (Model.Matches.Any())
+{
+    <div class="matches-list">
+        @foreach (var match in Model.Matches)
+        {
+            <div class="match-card">
+                <div class="match-header">
+                    <div class="match-badges">
+                        <span class="badge badge-format">
+                            @(match.Format == MatchFormat.Singles ? "🎾 Đơn" : "🎾🎾 Đôi")
+                        </span>
+                        @if (match.Challenge != null)
+                        {
+                            <span class="badge badge-challenge">⚔️ Challenge Match</span>
+                        }
+                    </div>
+                    <span class="match-time">@match.MatchDate.ToString("dd/MM/yyyy HH:mm")</span>
+                </div>
+
+                @if (match.Challenge != null)
+                {
+                    <div class="match-challenge">
+                        📌 Kèo: "@match.Challenge.Title"
+                    </div>
+                }
+
+                <div class="match-body">
+                    <div class="match-teams">
+                        <div class="team winner">
+                            <div class="team-header">🏆 THẮNG</div>
+                            @if (match.Format == MatchFormat.Singles)
+                            {
+                                <div class="player">@match.Winner1?.FullName</div>
+                                <div class="player-rank">⭐ @match.Winner1?.RankLevel.ToString("F1")</div>
+                            }
+                            else
+                            {
+                                <div class="player">@match.Winner1?.FullName</div>
+                                <div class="player-rank">⭐ @match.Winner1?.RankLevel.ToString("F1")</div>
+                                <div class="player" style="margin-top: 0.5rem;">@match.Winner2?.FullName</div>
+                                <div class="player-rank">⭐ @match.Winner2?.RankLevel.ToString("F1")</div>
+                            }
+                        </div>
+
+                        <div class="vs-divider">
+                            <span class="vs-text">VS</span>
+                        </div>
+
+                        <div class="team loser">
+                            <div class="team-header">❌ THUA</div>
+                            @if (match.Format == MatchFormat.Singles)
+                            {
+                                <div class="player">@match.Loser1?.FullName</div>
+                                <div class="player-rank">⭐ @match.Loser1?.RankLevel.ToString("F1")</div>
+                            }
+                            else
+                            {
+                                <div class="player">@match.Loser1?.FullName</div>
+                                <div class="player-rank">⭐ @match.Loser1?.RankLevel.ToString("F1")</div>
+                                <div class="player" style="margin-top: 0.5rem;">@match.Loser2?.FullName</div>
+                                <div class="player-rank">⭐ @match.Loser2?.RankLevel.ToString("F1")</div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="match-footer">
+                    @if (match.IsRanked)
+                    {
+                        <span class="badge-rank">⭐ Tính điểm Rank</span>
+                    }
+                    else
+                    {
+                        <span class="badge-no-rank">⚪ Không tính điểm</span>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="empty-state">
+        <div class="empty-state-icon">📜</div>
+        <p class="empty-state-text">Chưa có trận đấu nào được ghi nhận</p>
+    </div>
+}

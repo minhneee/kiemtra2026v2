@@ -1,0 +1,223 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Vợt Thủ Phố Núi</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        /* Enhanced Navigation */
+        .site-header {
+            background: var(--color-white);
+            color: var(--color-gray-800);
+            padding: 1rem 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid var(--color-primary);
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: nowrap;
+            gap: 1rem;
+        }
+
+        .site-logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            text-decoration: none;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition-base);
+        }
+
+        .site-logo:hover {
+            transform: scale(1.05);
+        }
+
+        .site-nav {
+            display: flex;
+            gap: 0.25rem;
+            align-items: center;
+            flex-wrap: nowrap;
+            flex: 1;
+        }
+
+        .nav-link {
+            color: var(--color-gray-700);
+            text-decoration: none;
+            padding: 0.6rem 0.9rem;
+            border-radius: var(--radius-md);
+            transition: all var(--transition-base);
+            font-weight: 600;
+            font-size: 0.85rem;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+            transition: all var(--transition-base);
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover {
+            color: var(--color-primary);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-section {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0 1rem;
+            border-left: 2px solid var(--color-gray-200);
+            border-right: 2px solid var(--color-gray-200);
+            white-space: nowrap;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--color-gray-800);
+        }
+
+        .rank-badge {
+            background: var(--gradient-primary);
+            color: var(--color-white);
+            padding: 0.35rem 0.85rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .logout-btn {
+            background: var(--color-white);
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition-base);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .logout-btn:hover {
+            background: var(--color-primary);
+            color: var(--color-white);
+            transform: translateY(-2px);
+        }
+
+        @@media (max-width: 768px) {
+            .header-container {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .site-nav {
+                width: 100%;
+                flex-wrap: wrap;
+                gap: 0.25rem;
+            }
+
+            .user-info {
+                border-left: none;
+                border-right: none;
+                flex-wrap: wrap;
+                width: 100%;
+                padding: 0;
+            }
+
+            .nav-link {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="/" class="site-logo">
+                <img src="~/images/pickleball-icon.svg" alt="Pickleball" style="width: 30px; height: 30px; margin-right: 0.5rem;" />
+                <span>Vợt Thủ Phố Núi</span>
+            </a>
+            
+            <nav class="site-nav">
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <div class="nav-section">
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a href="/Matches/Create" class="nav-link">⚖️ Nhập Kết Quả</a>
+                            <a href="/Challenges/Manage" class="nav-link">📋 Quản Lý Kèo</a>
+                            <a href="/Financial/Index" class="nav-link">💰 Tài Chính</a>
+                        }
+                        else
+                        {
+                            <a href="/Challenges" class="nav-link">⚔️ Tìm Kèo</a>
+                            <a href="/Bookings/Create" class="nav-link">📅 Đặt Sân</a>
+                            <a href="/Matches/History" class="nav-link">📜 Lịch Sử</a>
+                            <a href="/Profile" class="nav-link">👤 Hồ Sơ</a>
+                        }
+                    </div>
+                    
+                    <div class="user-info">
+                        <span class="user-name">👤 @User.Identity.Name</span>
+                        @if (ViewData["MemberRank"] != null)
+                        {
+                            <span class="rank-badge">⭐ @ViewData["MemberRank"]</span>
+                        }
+                    </div>
+                    
+                    <form method="post" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index")" style="display: inline;">
+                        <button type="submit" class="logout-btn">🚪 Đăng Xuất</button>
+                    </form>
+                }
+                else
+                {
+                    
+                }
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-container">
+        @RenderBody()
+    </main>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

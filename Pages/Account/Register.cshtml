@@ -1,0 +1,342 @@
+@page
+@model RegisterModel
+
+@{
+    ViewData["Title"] = "Đăng Ký";
+}
+
+<style>
+    .auth-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        min-height: calc(100vh - 80px);
+        gap: 0;
+    }
+
+    .auth-hero {
+        background: linear-gradient(135deg, #059669 0%, #10B981 100%);
+        padding: 4rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .auth-hero::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 600px;
+        height: 600px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+    }
+
+    .auth-hero-content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        max-width: 400px;
+    }
+
+    .auth-hero-icon {
+        font-size: 6rem;
+        margin-bottom: 2rem;
+    }
+
+    .auth-hero h2 {
+        font-size: 2.5rem;
+        font-weight: 900;
+        margin-bottom: 1rem;
+        line-height: 1.2;
+    }
+
+    .auth-hero p {
+        font-size: 1.2rem;
+        opacity: 0.95;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+
+    .auth-hero-features {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        padding: 2rem;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        font-size: 1.05rem;
+    }
+
+    .feature-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .feature-check {
+        font-size: 1.5rem;
+    }
+
+    .auth-form-wrapper {
+        padding: 4rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .auth-form-header {
+        margin-bottom: 2rem;
+    }
+
+    .auth-form-header h1 {
+        font-size: 2.2rem;
+        font-weight: 900;
+        color: var(--color-gray-900);
+        margin-bottom: 0.5rem;
+    }
+
+    .auth-form-header p {
+        color: var(--color-gray-600);
+        font-size: 1.1rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+        color: var(--color-gray-800);
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: 2px solid var(--color-gray-300);
+        border-radius: var(--radius-md);
+        font-size: 1rem;
+        transition: var(--transition-base);
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.1);
+    }
+
+    .btn {
+        width: 100%;
+        padding: 1rem;
+        background: var(--gradient-primary);
+        color: white;
+        border: none;
+        border-radius: var(--radius-md);
+        font-size: 1.05rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: var(--transition-base);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-top: 1rem;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(22, 163, 74, 0.3);
+    }
+
+    .divider {
+        text-align: center;
+        margin: 2rem 0;
+        padding: 2rem 0;
+        border-top: 1px solid var(--color-gray-300);
+        color: var(--color-gray-600);
+        font-size: 0.95rem;
+    }
+
+    .auth-link {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .auth-link a {
+        color: var(--color-primary);
+        text-decoration: none;
+        font-weight: 700;
+        transition: var(--transition-base);
+    }
+
+    .auth-link a:hover {
+        text-decoration: underline;
+    }
+
+    .error-message {
+        background: rgba(220, 38, 38, 0.08);
+        border-left: 4px solid #DC2626;
+        padding: 1rem;
+        border-radius: 8px;
+        color: #991B1B;
+        margin-bottom: 1.5rem;
+        font-size: 0.95rem;
+    }
+
+    .text-danger {
+        color: #DC2626;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        display: block;
+    }
+
+    .form-scroll {
+        max-height: calc(100vh - 200px);
+        overflow-y: auto;
+        padding-right: 1rem;
+    }
+
+    .form-scroll::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .form-scroll::-webkit-scrollbar-track {
+        background: var(--color-gray-100);
+        border-radius: 10px;
+    }
+
+    .form-scroll::-webkit-scrollbar-thumb {
+        background: var(--color-primary);
+        border-radius: 10px;
+    }
+
+    @@media (max-width: 1024px) {
+        .auth-wrapper {
+            grid-template-columns: 1fr;
+        }
+
+        .auth-hero {
+            min-height: 250px;
+            padding: 3rem 2rem;
+        }
+
+        .auth-hero h2 {
+            font-size: 2rem;
+        }
+
+        .auth-form-wrapper {
+            padding: 3rem 2rem;
+        }
+
+        .form-scroll {
+            max-height: none;
+            overflow-y: visible;
+            padding-right: 0;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .auth-form-wrapper {
+            padding: 2rem 1.5rem;
+        }
+
+        .auth-form-header h1 {
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+    }
+</style>
+
+<div class="auth-wrapper">
+    <div class="auth-hero">
+        <div class="auth-hero-content">
+            <div class="auth-hero-icon">⚡</div>
+            <h2>Gia Nhập Cộng Đồng!</h2>
+            <p>Tham gia những tay vợt xuất sắc và bắt đầu thi đấu ngay hôm nay</p>
+            
+            <div class="auth-hero-features">
+                <div class="feature-item">
+                    <span class="feature-check">✓</span>
+                    <span>Miễn phí để tham gia</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-check">✓</span>
+                    <span>Cộng đồng sôi động</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-check">✓</span>
+                    <span>Giải đấu hấp dẫn</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="auth-form-wrapper">
+        <div class="auth-form-header">
+            <h1>Đăng Ký</h1>
+            <p>Tạo tài khoản của bạn trong vài giây</p>
+        </div>
+
+        <div class="form-scroll">
+            <form method="post">
+                @{
+                    var errors = ViewData.ModelState;
+                    if (errors.ContainsKey("") && errors[""]?.Errors.Count > 0)
+                    {
+                        <div class="error-message">
+                            @errors[""]?.Errors[0].ErrorMessage
+                        </div>
+                    }
+                }
+
+                <div class="form-group">
+                    <label class="form-label" asp-for="Input.FullName">👤 Họ và Tên</label>
+                    <input class="form-control" asp-for="Input.FullName" placeholder="Nguyễn Văn A" />
+                    <span asp-validation-for="Input.FullName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" asp-for="Input.Email">📧 Email</label>
+                    <input class="form-control" asp-for="Input.Email" autocomplete="username" placeholder="your@email.com" />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" asp-for="Input.Password">🔐 Mật Khẩu</label>
+                    <input class="form-control" asp-for="Input.Password" type="password" autocomplete="new-password" placeholder="••••••••" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" asp-for="Input.ConfirmPassword">✓ Xác Nhận Mật Khẩu</label>
+                    <input class="form-control" asp-for="Input.ConfirmPassword" type="password" autocomplete="new-password" placeholder="••••••••" />
+                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn">🎯 Đăng Ký Ngay</button>
+            </form>
+        </div>
+
+        <div class="divider">Đã có tài khoản?</div>
+
+        <div class="auth-link">
+            <span>Quay lại đăng nhập</span>
+            <a href="/Account/Login">Đăng Nhập →</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

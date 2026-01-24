@@ -1,0 +1,61 @@
+<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+  <!-- Left Paddle -->
+  <path d="M 40 60 Q 20 80, 20 130 Q 20 180, 40 200 L 80 160 L 80 100 L 80 60 Z" fill="black" stroke="black" stroke-width="2"/>
+  <circle cx="40" cy="75" r="5" fill="white"/>
+  <circle cx="55" cy="75" r="5" fill="white"/>
+  <circle cx="70" cy="75" r="5" fill="white"/>
+  <circle cx="40" cy="95" r="5" fill="white"/>
+  <circle cx="55" cy="95" r="5" fill="white"/>
+  <circle cx="70" cy="95" r="5" fill="white"/>
+  <circle cx="40" cy="115" r="5" fill="white"/>
+  <circle cx="55" cy="115" r="5" fill="white"/>
+  <circle cx="70" cy="115" r="5" fill="white"/>
+  <circle cx="40" cy="135" r="5" fill="white"/>
+  <circle cx="55" cy="135" r="5" fill="white"/>
+  <circle cx="70" cy="135" r="5" fill="white"/>
+  <circle cx="40" cy="155" r="5" fill="white"/>
+  <circle cx="55" cy="155" r="5" fill="white"/>
+  <circle cx="70" cy="155" r="5" fill="white"/>
+  <circle cx="40" cy="175" r="5" fill="white"/>
+  <circle cx="55" cy="175" r="5" fill="white"/>
+  <circle cx="70" cy="175" r="5" fill="white"/>
+
+  <!-- Right Paddle -->
+  <path d="M 160 60 Q 180 80, 180 130 Q 180 180, 160 200 L 120 160 L 120 100 L 120 60 Z" fill="black" stroke="black" stroke-width="2"/>
+  <circle cx="160" cy="75" r="5" fill="white"/>
+  <circle cx="145" cy="75" r="5" fill="white"/>
+  <circle cx="130" cy="75" r="5" fill="white"/>
+  <circle cx="160" cy="95" r="5" fill="white"/>
+  <circle cx="145" cy="95" r="5" fill="white"/>
+  <circle cx="130" cy="95" r="5" fill="white"/>
+  <circle cx="160" cy="115" r="5" fill="white"/>
+  <circle cx="145" cy="115" r="5" fill="white"/>
+  <circle cx="130" cy="115" r="5" fill="white"/>
+  <circle cx="160" cy="135" r="5" fill="white"/>
+  <circle cx="145" cy="135" r="5" fill="white"/>
+  <circle cx="130" cy="135" r="5" fill="white"/>
+  <circle cx="160" cy="155" r="5" fill="white"/>
+  <circle cx="145" cy="155" r="5" fill="white"/>
+  <circle cx="130" cy="155" r="5" fill="white"/>
+  <circle cx="160" cy="175" r="5" fill="white"/>
+  <circle cx="145" cy="175" r="5" fill="white"/>
+  <circle cx="130" cy="175" r="5" fill="white"/>
+
+  <!-- Handles -->
+  <rect x="85" y="190" width="30" height="35" fill="black" rx="5"/>
+  <circle cx="92" cy="210" r="3" fill="white"/>
+  <circle cx="100" cy="210" r="3" fill="white"/>
+  <circle cx="108" cy="210" r="3" fill="white"/>
+  <circle cx="92" cy="220" r="3" fill="white"/>
+  <circle cx="100" cy="220" r="3" fill="white"/>
+  <circle cx="108" cy="220" r="3" fill="white"/>
+
+  <!-- Ball -->
+  <circle cx="100" cy="35" r="22" fill="black" stroke="black" stroke-width="1"/>
+  <circle cx="85" cy="25" r="3.5" fill="white"/>
+  <circle cx="100" cy="20" r="3.5" fill="white"/>
+  <circle cx="115" cy="25" r="3.5" fill="white"/>
+  <circle cx="85" cy="40" r="3.5" fill="white"/>
+  <circle cx="100" cy="45" r="3.5" fill="white"/>
+  <circle cx="115" cy="40" r="3.5" fill="white"/>
+</svg>

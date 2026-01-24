@@ -1,0 +1,308 @@
+@page
+@model PickleballClubManagement.Pages.Challenges.IndexModel
+@{
+    ViewData["Title"] = "Sàn Đấu Kèo";
+}
+
+<style>
+    .challenge-hero {
+        background: linear-gradient(135deg, #EC4899 0%, #F97316 100%);
+        color: var(--color-white);
+        padding: 3rem var(--spacing-lg);
+        border-radius: var(--radius-lg);
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(236, 72, 153, 0.2);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .challenge-hero-content h1 {
+        font-size: 2.5rem;
+        font-weight: 900;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .challenge-hero-content p {
+        margin: 0.5rem 0 0;
+        opacity: 0.95;
+        font-size: 1.1rem;
+    }
+
+    .hero-action {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .challenges-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .challenge-card {
+        background: var(--color-white);
+        border: 1px solid var(--color-gray-200);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        transition: all var(--transition-base);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .challenge-card:hover {
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+        transform: translateY(-6px);
+        border-color: #EC4899;
+    }
+
+    .challenge-card.minigame {
+        border: 2px solid #FF9800;
+        background: linear-gradient(135deg, #FFF, #FFF8F3);
+    }
+
+    .challenge-card.minigame:hover {
+        border-color: #F97316;
+    }
+
+    .challenge-badge {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius-sm);
+        font-weight: 700;
+        font-size: 0.85rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .challenge-badge.minigame {
+        background: #FFF3E0;
+        color: #E65100;
+    }
+
+    .challenge-badge.regular {
+        background: #DBEAFE;
+        color: #1E40AF;
+    }
+
+    .challenge-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--color-gray-900);
+        margin-bottom: 0.75rem;
+        line-height: 1.4;
+    }
+
+    .challenge-description {
+        color: var(--color-gray-700);
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .challenge-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--color-gray-200);
+    }
+
+    .meta-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.35rem 0.85rem;
+        background: var(--color-gray-100);
+        border-radius: var(--radius-sm);
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--color-gray-800);
+    }
+
+    .meta-badge.creator {
+        background: #E0E7FF;
+        color: #3730A3;
+    }
+
+    .meta-badge.rank {
+        background: #FEF3C7;
+        color: #92400E;
+    }
+
+    .meta-badge.prize {
+        background: #FED7AA;
+        color: #7C2D12;
+    }
+
+    .meta-badge.fee {
+        background: #D1FAE5;
+        color: #065F46;
+    }
+
+    .challenge-footer {
+        margin-top: auto;
+    }
+
+    .btn {
+        padding: 0.85rem 1.5rem;
+        border-radius: var(--radius-md);
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        border: none;
+        transition: all var(--transition-base);
+        text-decoration: none;
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+        color: var(--color-white);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(22, 163, 74, 0.3);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: var(--color-white);
+        border-radius: var(--radius-lg);
+        border: 2px dashed var(--color-gray-200);
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state-text {
+        font-size: 1.1rem;
+        color: var(--color-gray-600);
+        margin: 0 0 1rem;
+    }
+
+    @@media (max-width: 768px) {
+        .challenge-hero {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .challenge-hero-content h1 {
+            font-size: 1.8rem;
+        }
+
+        .hero-action {
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .hero-action .btn {
+            width: 100%;
+        }
+
+        .challenges-container {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="challenge-hero">
+    <div class="challenge-hero-content">
+        <h1>⚔️ Sàn Đấu Kèo</h1>
+        <p>Tìm đối thủ xứng tầm hoặc tham gia giải đấu!</p>
+    </div>
+    <div class="hero-action">
+        <a href="/Challenges/Create" class="btn btn-primary">🔥 Tạo Kèo Mới</a>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success" style="margin-bottom: 2rem;">
+        ✅ @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (Model.Challenges.Any())
+{
+    <div class="challenges-container">
+        @foreach (var challenge in Model.Challenges)
+        {
+            var isMiniGame = challenge.Type == PickleballClubManagement.Models.ChallengeType.MiniGame;
+            
+            <div class="challenge-card @(isMiniGame ? "minigame" : "")">
+                <div style="padding: 1.5rem;">
+                    <div class="challenge-badge @(isMiniGame ? "minigame" : "regular")">
+                        @(isMiniGame ? "🏆 Giải Đấu" : "🎾 Tìm Đối")
+                    </div>
+
+                    <h3 class="challenge-title">@challenge.Title</h3>
+
+                    @if (isMiniGame)
+                    {
+                        <div style="margin-bottom: 1rem; color: #E65100; font-weight: 600; font-size: 0.9rem;">
+                            @(challenge.ResultMode == PickleballClubManagement.Models.GameMode.TeamBattle ? "⚔️ Team Battle" : "🔄 Vòng Tròn")
+                        </div>
+                    }
+
+                    <p class="challenge-description">@challenge.Description</p>
+
+                    <div class="challenge-meta">
+                        <div class="meta-badge creator">
+                            👤 @challenge.Creator?.FullName
+                        </div>
+                        @if (challenge.Creator != null)
+                        {
+                            <div class="meta-badge rank">
+                                ⭐ @challenge.Creator.RankLevel.ToString("F1")
+                            </div>
+                        }
+                        
+                        @if (isMiniGame)
+                        {
+                            <div class="meta-badge prize">
+                                💰 Thưởng: @challenge.PrizePool.ToString("N0") đ
+                            </div>
+                            <div class="meta-badge fee">
+                                🎫 Vé: @challenge.EntryFee.ToString("N0") đ
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="challenge-footer" style="padding: 1rem 1.5rem;">
+                    <form method="post" asp-page-handler="Accept" asp-route-id="@challenge.Id">
+                        <button type="submit" class="btn btn-primary">
+                            @(isMiniGame ? "📝 Đăng Ký Tham Gia" : "🤝 Nhận Kèo Này")
+                        </button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="empty-state">
+        <div class="empty-state-icon">🎾</div>
+        <p class="empty-state-text">Chưa có kèo nào đang mở. Hãy là người đầu tiên tạo kèo!</p>
+        <a href="/Challenges/Create" class="btn btn-primary" style="width: auto; display: inline-block; padding: 0.85rem 2rem;">
+            🔥 Tạo Kèo Ngay
+        </a>
+    </div>
+}
