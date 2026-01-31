@@ -4,18 +4,20 @@ Hệ thống quản lý câu lạc bộ Pickleball - Vợt Thủ Phố Núi
 
 ## 📋 Mô Tả Dự Án
 
-Ứng dụng web ASP.NET Core Razor Pages cho phép quản lý hoạt động câu lạc bộ pickleball, bao gồm:
+Ứng dụng web ASP.NET Core Razor Pages cho phép quản lý hoạt động câu lạc bộ pickleball, **không cần cơ sở dữ liệu**, bao gồm:
 - Quản lý thành viên và xếp hạng
 - Tổ chức các trận đấu và kèo cạnh tranh
 - Đặt sân phòng chơi
 - Quản lý tài chính
 - Quản lý tin tức câu lạc bộ
 
+**✨ Điểm nổi bật:** Ứng dụng sử dụng lưu trữ **in-memory** (bộ nhớ) thay vì cơ sở dữ liệu, cho phép chạy mà không cần SQL Server.
+
 ## 🛠️ Yêu Cầu Hệ Thống
 
 - **.NET 10.0** trở lên
-- **SQL Server** (Local hoặc Remote)
 - **Visual Studio** hoặc **JetBrains Rider** (tùy chọn)
+- **Không cần SQL Server** ✅
 
 ## 📦 Cài Đặt
 
@@ -25,41 +27,15 @@ git clone <repository-url>
 cd kiemtra2026v2
 ```
 
-### 2. Cấu Hình Cơ Sở Dữ Liệu
-
-Mở file `appsettings.json` và cập nhật connection string:
-
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Server=YOUR_SERVER\\YOUR_INSTANCE;Database=PCM_Database;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True"
-  }
-}
-```
-
-**Ví dụ:**
-- **Local SQL Server:** `Server=.;Database=PCM_Database;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True`
-- **SQL Server Express:** `Server=.\SQLEXPRESS;Database=PCM_Database;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True`
-- **Remote Server:** `Server=your-server-name;Database=PCM_Database;User Id=sa;Password=your_password;MultipleActiveResultSets=true;TrustServerCertificate=True`
-
-### 3. Cập Nhật Database
-
-Chạy lệnh để tạo database và apply tất cả migrations:
-
-```bash
-dotnet ef database update
-```
-
-**Hoặc nếu sử dụng Package Manager Console trong Visual Studio:**
-```powershell
-Update-Database
-```
-
-### 4. Build Dự Án
+### 2. Build Dự Án
 
 ```bash
 dotnet build
 ```
+
+### 3. Xong! Không cần cấu hình database ✅
+
+Ứng dụng sẽ tự động khởi tạo dữ liệu mẫu trong bộ nhớ khi khởi động.
 
 ## 🚀 Chạy Ứng Dụng
 
@@ -69,7 +45,7 @@ dotnet build
 dotnet run
 ```
 
-Ứng dụng sẽ chạy tại: `https://localhost:5268` hoặc `http://localhost:5269`
+Ứng dụng sẽ chạy tại: `http://localhost:5268`
 
 ### Chế độ Production
 
@@ -77,147 +53,186 @@ dotnet run
 dotnet run --configuration Release
 ```
 
-## 👤 Tài Khoản Admin Mặc Định
+## 👤 Tài Khoản Đăng Nhập Mặc Định
 
-Sau khi chạy ứng dụng lần đầu, hệ thống sẽ tự động tạo tài khoản admin:
+Hệ thống cung cấp 1 tài khoản Admin mặc định:
 
-- **Email:** `admin@pickleballclub.com`
-- **Mật khẩu:** `Admin@123`
+**Tài khoản Admin:**
+- **Username:** `admin`
+- **Mật khẩu:** `admin123`
 - **Vai trò:** Admin
 
-## 📊 Seeding Data
+Bạn có thể đăng ký tài khoản Member mới trực tiếp qua ứng dụng.
 
-Khi ứng dụng khởi động, nó sẽ tự động:
+## 📊 Dữ Liệu Mẫu
 
-1. **Tạo các role** (Admin, Member)
-2. **Tạo tài khoản Admin** mặc định
-3. **Tạo 8 thành viên mẫu** với các trận đấu, kèo, và dữ liệu tài chính
+Khi ứng dụng khởi động lần đầu, nó sẽ tự động tạo:
 
-**Các thành viên mẫu được tạo:**
-- Nguyễn Văn A (Rank: 1.5)
-- Trần Thị B (Rank: 2.1)
-- Lê Văn C (Rank: 1.6)
-- Phạm Văn D (Rank: 2.0)
-- Hoàng Thị E (Rank: 1.9)
-- Vũ Văn F (Rank: 1.8)
-- Đỗ Thị G (Rank: 2.2)
-- Bùi Văn H (Rank: 1.7)
+### Thành viên mẫu
+- **Nguyễn Văn A** (Rank: 2.5)
+- **Trần Thị B** (Rank: 3.0)
+- **Phạm Văn C** (Rank: 2.0)
 
-**Mật khẩu mẫu:** `Member@123`
+### Sân chơi
+- Court 1, Court 2, Court 3
+
+### Kèo cạnh tranh mẫu
+- Kèo 500k - Chấp nửa trái (1v1)
+- Kèo 1 triệu - Team Battle (2v2)
+
+### Trận đấu mẫu
+- Trận Singles với điểm số và các set
+- Trận Doubles với kết quả chi tiết
+
+### Danh mục giao dịch
+**Khoản Thu (Income):**
+- Court Booking Fee
+- Tournament Fee
+- Membership Fee
+
+**Khoản Chi (Expense):**
+- Court Maintenance
+- Equipment & Supplies
+- Staff Salary
+- Prize & Awards
 
 ## 📂 Cấu Trúc Thư Mục
 
 ```
 kiemtra2026v2/
-├── Data/                    # Entity Framework DbContext
-│   └── ApplicationDbContext.cs
-├── Models/                  # Entity models
+├── Services/                # In-Memory Data Store & Services
+│   ├── InMemoryDataStore.cs      # Lưu trữ dữ liệu trong bộ nhớ
+│   ├── InMemoryUserStore.cs      # Lưu trữ tài khoản người dùng
+│   ├── MemberService.cs
+│   ├── ChallengeService.cs
+│   ├── MatchService.cs
+│   └── BookingService.cs
+├── Models/                  # Entity models (không dùng EF Core)
 │   ├── Member.cs
 │   ├── Challenge.cs
 │   ├── Match.cs
+│   ├── MatchSet.cs
 │   ├── Booking.cs
 │   ├── Court.cs
 │   ├── News.cs
 │   ├── Transaction.cs
 │   ├── TransactionCategory.cs
 │   └── Participant.cs
-├── Services/                # Business logic
-│   ├── DbSeeder.cs          # Database seeding
-│   ├── MemberService.cs
-│   ├── ChallengeService.cs
-│   ├── MatchService.cs
-│   └── BookingService.cs
 ├── Pages/                   # Razor Pages
 │   ├── Account/
+│   │   ├── Login.cshtml
+│   │   ├── Register.cshtml
+│   │   └── Logout.cshtml
 │   ├── Bookings/
 │   ├── Challenges/
 │   ├── Financial/
 │   ├── Matches/
 │   ├── Profile/
 │   └── Shared/
-├── Migrations/              # EF Core migrations
+│       └── _LoginPartial.cshtml
 ├── Properties/
 ├── wwwroot/                 # Static files (CSS, JS, images)
+│   ├── css/
+│   ├── js/
+│   └── lib/
 ├── Program.cs
 ├── appsettings.json
 └── kiemtra2026v2.sln
 ```
 
-## 🗄️ Database Tables
+## 🔐 Hệ Thống Xác Thực
 
-Ứng dụng sử dụng 9 bảng chính (với tiền tố `395_`):
+Ứng dụng sử dụng **Cookie-based Authentication** (không sử dụng ASP.NET Identity):
 
-| Bảng | Mô Tả |
-|------|-------|
-| `395_Members` | Thông tin thành viên |
-| `395_Challenges` | Các kèo cạnh tranh |
-| `395_Matches` | Kết quả trận đấu |
-| `395_Bookings` | Đặt sân |
-| `395_Courts` | Quản lý sân chơi |
-| `395_News` | Tin tức câu lạc bộ |
-| `395_Participants` | Người tham gia kèo/trận |
-| `395_Transactions` | Giao dịch tài chính |
-| `395_TransactionCategories` | Loại giao dịch |
+- **Admin Role:** Có quyền truy cập các trang quản lý (Matches/Create, Financial, Challenges/Manage, News/Create)
+- **Member Role:** Có quyền xem lịch sử trận đấu và đặt sân
+- **Unauthenticated:** Có thể xem trang chủ
 
-## 🔧 Migrations
+### Trang Yêu Cầu Admin
+- `/Matches/Create` - Nhập kết quả trận đấu
+- `/Financial` - Quản lý tài chính
+- `/Financial/Create` - Ghi nhận giao dịch
+- `/Challenges/Manage` - Quản lý kèo cạnh tranh
+- `/News/Create`, `/News/Edit` - Quản lý tin tức
 
-Tất cả migrations được lưu trong thư mục `Migrations/`:
+## 📦 In-Memory Data Storage
 
-- `InitialCreate` - Tạo schema cơ bản
-- `AdvancedUpdate` - Thêm các bảng nâng cao
-- `RenameTablesTo186` - Đổi tên bảng
-- `Rename186To395` - Đổi tên bảng từ 186 thành 395 (migrations cuối cùng)
+Tất cả dữ liệu được lưu trữ trong bộ nhớ (RAM) sử dụng static collections:
 
-Để xem danh sách tất cả migrations:
-```bash
-dotnet ef migrations list
-```
+**Các collection chính:**
+- `_members` - Danh sách thành viên
+- `_challenges` - Danh sách kèo cạnh tranh
+- `_matches` - Danh sách trận đấu
+- `_matchSets` - Các set của trận đấu
+- `_bookings` - Đặt sân
+- `_courts` - Sân chơi
+- `_news` - Tin tức
+- `_transactions` - Giao dịch tài chính
+- `_transactionCategories` - Loại giao dịch
+- `_participants` - Người tham gia
+
+**⚠️ Lưu ý:** Dữ liệu sẽ được reset mỗi khi ứng dụng khởi động lại. Để giữ lại dữ liệu, cần triển khai lưu trữ vào database hoặc file.
 
 ## 🔑 Chức Năng Chính
 
 ### Admin
-- Nhập kết quả trận đấu
-- Quản lý kèo cạnh tranh
-- Quản lý tài chính
-- Xem dashboard
+- 📊 Nhập kết quả trận đấu
+- 🏆 Quản lý kèo cạnh tranh
+- 💰 Quản lý tài chính (ghi nhận thu chi)
+- 📰 Tạo và quản lý tin tức câu lạc bộ
+- 📈 Xem thống kê
 
 ### Member
-- Tìm kèo cạnh tranh
-- Đặt sân
-- Xem lịch sử trận đấu
-- Xem/cập nhật hồ sơ cá nhân
+- 🔍 Tìm kèo cạnh tranh
+- 🎾 Đặt sân
+- 📋 Xem lịch sử trận đấu
+- 👤 Xem/cập nhật hồ sơ cá nhân
+
+### Public
+- 📰 Xem tin tức câu lạc bộ
+- 🏠 Xem trang chủ
+- 🔐 Đăng nhập/Đăng ký
 
 ## 🐛 Troubleshooting
 
-### Lỗi: "Database connection failed"
-- Kiểm tra connection string trong `appsettings.json`
-- Đảm bảo SQL Server đang chạy
-- Kiểm tra quyền truy cập database
-
-### Lỗi: "Migration pending"
+### Lỗi: "Port 5268 already in use"
 ```bash
-dotnet ef database update
+# Tìm process sử dụng port 5268 và terminate
+netstat -ano | findstr :5268
+taskkill /PID <PID> /F
 ```
 
-### Lỗi: "Could not find file 'ApplicationDbContext.cs'"
+### Lỗi: ".NET SDK not found"
+- Cài đặt .NET 10.0 SDK từ https://dotnet.microsoft.com/download
+
+### Lỗi: "Could not find a part of the path"
 ```bash
-dotnet restore
+dotnet clean
+dotnet build
 ```
 
-## 📝 Logs
+### Dữ liệu mẫu không xuất hiện
+- Kiểm tra xem `InMemoryDataStore.InitializeSampleData()` có được gọi trong `Program.cs` không
+- Xóa folder `bin` và `obj`, sau đó rebuild
 
-Ứng dụng sẽ ghi log trong console khi chạy mode development. Kiểm tra các thông báo liên quan đến:
-- Entity Framework migrations
-- Database seeding
-- Application startup
+## 📝 Ghi Chú
 
-## 📞 Hỗ Trợ
+- ✅ **Không cần SQL Server** - Ứng dụng sẽ chạy mà không cần cơ sở dữ liệu
+- ✅ **Khởi động nhanh** - Không cần chạy migrations
+- ⚠️ **Dữ liệu tạm thời** - Tất cả dữ liệu sẽ mất khi ứng dụng đóng
+- 🔄 **Dữ liệu được reset** - Mỗi lần khởi động lại, dữ liệu mẫu sẽ được tạo lại
 
-Nếu gặp vấn đề, vui lòng kiểm tra:
-1. `.NET SDK` có được cài đặt đúng không
-2. `SQL Server` có đang chạy không
-3. `Connection string` có đúng không
-4. Tất cả `migrations` đã được apply chưa
+## 🚀 Chuyển Sang Database
+
+Nếu muốn sử dụng SQL Server trong tương lai:
+
+1. Cài đặt Entity Framework Core
+2. Tạo DbContext
+3. Tạo migrations
+4. Cập nhật `Program.cs` để sử dụng DbContext thay vì InMemoryDataStore
+5. Chạy `dotnet ef database update`
+
+Chi tiết xem file [DATABASE_SETUP.md](DATABASE_SETUP.md)
 
 ## 📄 License
 
@@ -225,6 +240,7 @@ Dự án này được phát triển cho mục đích giáo dục.
 
 ---
 
-**Última cập nhật:** 25/01/2026
-**Phiên bản .NET:** 10.0
-**Entity Framework Core:** 10.0.2
+**Cập nhật lần cuối:** 31/01/2026  
+**Phiên bản .NET:** 10.0  
+**Framework:** ASP.NET Core Razor Pages  
+**Lưu trữ:** In-Memory Collections (Static)

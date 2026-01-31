@@ -1,22 +1,19 @@
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PickleballClubManagement.Services;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace PickleballClubManagement.Pages.Account
 {
     public class LoginModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
         private readonly IMemberService _memberService;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IMemberService memberService)
+        public LoginModel(IMemberService memberService)
         {
-            _signInManager = signInManager;
-            _userManager = userManager;
             _memberService = memberService;
         }
 
@@ -27,9 +24,8 @@ namespace PickleballClubManagement.Pages.Account
 
         public class InputModel
         {
-            [Required(ErrorMessage = "Vui lòng nhập email")]
-            [EmailAddress(ErrorMessage = "Email không hợp lệ")]
-            public string Email { get; set; } = string.Empty;
+            [Required(ErrorMessage = "Vui lòng nhập tên đăng nhập")]
+            public string Username { get; set; } = string.Empty;
 
             [Required(ErrorMessage = "Vui lòng nhập mật khẩu")]
             [DataType(DataType.Password)]
@@ -42,7 +38,6 @@ namespace PickleballClubManagement.Pages.Account
         public async Task OnGetAsync(string? returnUrl = null)
         {
             ReturnUrl = returnUrl ?? Url.Content("~/");
-            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
         }
 
         public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
@@ -51,28 +46,50 @@ namespace PickleballClubManagement.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
-
-                if (result.Succeeded)
+                if (InMemoryUserStore.TryAuthenticate(Input.Username, Input.Password))
                 {
-                    // Ensure member record exists
-                    var user = await _userManager.FindByEmailAsync(Input.Email);
-                    if (user != null)
+                    var userInfo = InMemoryUserStore.GetUserInfo(Input.Username);
+                    if (userInfo.HasValue)
                     {
-                        var member = await _memberService.GetMemberByUserIdAsync(user.Id);
+                        // Create claims principal
+                        var claims = new List<Claim>
+                        {
+                            new Claim(ClaimTypes.NameIdentifier, Input.Username),
+                            new Claim(ClaimTypes.Name, Input.Username),
+                            new Claim(ClaimTypes.Email, userInfo.Value.email),
+                        };
+
+                        // Add role claims
+                        foreach (var role in userInfo.Value.roles)
+                        {
+                            claims.Add(new Claim(ClaimTypes.Role, role));
+                        }
+
+                        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                        var authProperties = new AuthenticationProperties
+                        {
+                            IsPersistent = Input.RememberMe,
+                            ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7)
+                        };
+
+                        await HttpContext.SignInAsync(
+                            CookieAuthenticationDefaults.AuthenticationScheme,
+                            new ClaimsPrincipal(claimsIdentity),
+                            authProperties);
+
+                        // Ensure member record exists
+                        var member = await _memberService.GetMemberByUserIdAsync(Input.Username);
                         if (member == null)
                         {
-                            await _memberService.CreateMemberAsync(user.Id, Input.Email);
+                            await _memberService.CreateMemberAsync(Input.Username, userInfo.Value.fullName);
                         }
-                    }
 
-                    return LocalRedirect(returnUrl);
+                        return LocalRedirect(returnUrl);
+                    }
                 }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Email hoặc mật khẩu không đúng.");
-                    return Page();
-                }
+
+                ModelState.AddModelError(string.Empty, "Tên đăng nhập hoặc mật khẩu không đúng.");
+                return Page();
             }
 
             return Page();

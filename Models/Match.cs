@@ -57,6 +57,9 @@ namespace PickleballClubManagement.Models
         [ForeignKey("Loser2Id")]
         public virtual Member? Loser2 { get; set; }
 
+        // MatchSets relationship
+        public virtual ICollection<MatchSet> Sets { get; set; } = new List<MatchSet>();
+
         public WinningSide WinningSide { get; set; } = WinningSide.None;
     }
 

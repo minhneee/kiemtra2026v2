@@ -301,7 +301,13 @@
                 }
 
                 <div class="form-group">
-                    <label class="form-label" asp-for="Input.FullName">👤 Họ và Tên</label>
+                    <label class="form-label" asp-for="Input.Username">👤 Tên Đăng Nhập</label>
+                    <input class="form-control" asp-for="Input.Username" placeholder="username" />
+                    <span asp-validation-for="Input.Username" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" asp-for="Input.FullName">👥 Họ và Tên</label>
                     <input class="form-control" asp-for="Input.FullName" placeholder="Nguyễn Văn A" />
                     <span asp-validation-for="Input.FullName" class="text-danger"></span>
                 </div>

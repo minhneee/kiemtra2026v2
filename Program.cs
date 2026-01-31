@@ -1,26 +1,20 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using PickleballClubManagement.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using PickleballClubManagement.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Add authentication services (using cookies, no database)
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";
+        options.LogoutPath = "/Account/Logout";
+        options.ExpireTimeSpan = TimeSpan.FromDays(7);
+    });
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => {
-    options.SignIn.RequireConfirmedAccount = false;
-    options.Password.RequireDigit = false;
-    options.Password.RequireLowercase = false;
-    options.Password.RequireUppercase = false;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequiredLength = 4;
-})
-    .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddAuthorization();
 
-// Register services
+// Register services (now using in-memory storage)
 builder.Services.AddScoped<IMemberService, MemberService>();
 builder.Services.AddScoped<IChallengeService, ChallengeService>();
 builder.Services.AddScoped<IMatchService, MatchService>();
@@ -46,12 +40,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
-
-// Seed database with admin account
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    await DbSeeder.SeedAsync(services);
-}
 
 app.Run();

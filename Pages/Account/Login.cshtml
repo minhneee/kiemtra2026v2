@@ -312,8 +312,8 @@
 
         <div class="demo-box">
             <strong>🔑 Tài Khoản Demo:</strong>
-            <div class="demo-item">Email: <code>admin@pickleballclub.com</code></div>
-            <div class="demo-item">Password: <code>Admin@123</code></div>
+            <div class="demo-item">Tên đăng nhập: <code>admin</code></div>
+            <div class="demo-item">Mật khẩu: <code>admin123</code></div>
         </div>
 
         <form method="post">
@@ -328,9 +328,9 @@
             }
 
             <div class="form-group">
-                <label class="form-label" asp-for="Input.Email">📧 Email</label>
-                <input class="form-control" asp-for="Input.Email" autocomplete="username" placeholder="your@email.com" />
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
+                <label class="form-label" asp-for="Input.Username">👤 Tên Đăng Nhập</label>
+                <input class="form-control" asp-for="Input.Username" autocomplete="username" placeholder="your-username" />
+                <span asp-validation-for="Input.Username" class="text-danger"></span>
             </div>
 
             <div class="form-group">

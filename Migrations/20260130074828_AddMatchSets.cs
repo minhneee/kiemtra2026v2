@@ -1,0 +1,48 @@
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace PickleballClubManagement.Migrations
+{
+    /// <inheritdoc />
+    public partial class AddMatchSets : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.CreateTable(
+                name: "395_MatchSets",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MatchId = table.Column<int>(type: "int", nullable: false),
+                    SetNumber = table.Column<int>(type: "int", nullable: false),
+                    TeamAScore = table.Column<int>(type: "int", nullable: false),
+                    TeamBScore = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_395_MatchSets", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_395_MatchSets_395_Matches_MatchId",
+                        column: x => x.MatchId,
+                        principalTable: "395_Matches",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_395_MatchSets_MatchId",
+                table: "395_MatchSets",
+                column: "MatchId");
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "395_MatchSets");
+        }
+    }
+}

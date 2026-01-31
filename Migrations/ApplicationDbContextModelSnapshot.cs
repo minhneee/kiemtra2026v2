@@ -402,6 +402,33 @@ namespace PickleballClubManagement.Migrations
                     b.ToTable("395_Matches", (string)null);
                 });
 
+            modelBuilder.Entity("PickleballClubManagement.Models.MatchSet", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("MatchId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SetNumber")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeamAScore")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeamBScore")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MatchId");
+
+                    b.ToTable("395_MatchSets", (string)null);
+                });
+
             modelBuilder.Entity("PickleballClubManagement.Models.Member", b =>
                 {
                     b.Property<int>("Id")
@@ -690,6 +717,17 @@ namespace PickleballClubManagement.Migrations
                     b.Navigation("Winner2");
                 });
 
+            modelBuilder.Entity("PickleballClubManagement.Models.MatchSet", b =>
+                {
+                    b.HasOne("PickleballClubManagement.Models.Match", "Match")
+                        .WithMany("Sets")
+                        .HasForeignKey("MatchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Match");
+                });
+
             modelBuilder.Entity("PickleballClubManagement.Models.Member", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
@@ -736,6 +774,11 @@ namespace PickleballClubManagement.Migrations
                     b.Navigation("Matches");
 
                     b.Navigation("Participants");
+                });
+
+            modelBuilder.Entity("PickleballClubManagement.Models.Match", b =>
+                {
+                    b.Navigation("Sets");
                 });
 
             modelBuilder.Entity("PickleballClubManagement.Models.Member", b =>

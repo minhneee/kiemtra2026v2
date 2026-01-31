@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using PickleballClubManagement.Data;
 using PickleballClubManagement.Models;
+using PickleballClubManagement.Services;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
@@ -12,13 +11,6 @@ namespace PickleballClubManagement.Pages.Financial
     [Authorize(Roles = "Admin")]
     public class CreateModel : PageModel
     {
-        private readonly ApplicationDbContext _context;
-
-        public CreateModel(ApplicationDbContext context)
-        {
-            _context = context;
-        }
-
         [BindProperty]
         public InputModel Input { get; set; } = new();
 
@@ -42,14 +34,15 @@ namespace PickleballClubManagement.Pages.Financial
 
         public async Task OnGetAsync()
         {
-            Categories = await _context.TransactionCategories.ToListAsync();
+            Categories = InMemoryDataStore.GetTransactionCategories();
+            await Task.CompletedTask;
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
-                Categories = await _context.TransactionCategories.ToListAsync();
+                Categories = InMemoryDataStore.GetTransactionCategories();
                 return Page();
             }
 
@@ -63,8 +56,7 @@ namespace PickleballClubManagement.Pages.Financial
                 CreatedById = User.FindFirstValue(ClaimTypes.NameIdentifier)
             };
 
-            _context.Transactions.Add(transaction);
-            await _context.SaveChangesAsync();
+            InMemoryDataStore.AddTransaction(transaction);
 
             TempData["SuccessMessage"] = "Ghi nhận giao dịch thành công!";
             return RedirectToPage("/Financial/Index");

@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using PickleballClubManagement.Data;
 using PickleballClubManagement.Models;
 using PickleballClubManagement.Services;
 using System.Security.Claims;
@@ -12,15 +10,13 @@ namespace PickleballClubManagement.Pages.Challenges
     [Authorize]
     public class IndexModel : PageModel
     {
-        private readonly ApplicationDbContext _context; // Use context directly for complex query or add new Service method
         private readonly IChallengeService _challengeService;
         private readonly IMemberService _memberService;
 
-        public IndexModel(IChallengeService challengeService, IMemberService memberService, ApplicationDbContext context)
+        public IndexModel(IChallengeService challengeService, IMemberService memberService)
         {
             _challengeService = challengeService;
             _memberService = memberService;
-            _context = context;
         }
 
         public List<Challenge> Challenges { get; set; } = new();
@@ -36,11 +32,11 @@ namespace PickleballClubManagement.Pages.Challenges
             }
 
             // Get Open Duels OR Ongoing MiniGames
-            Challenges = await _context.Challenges
-                .Include(c => c.Creator)
+            var challenges = await _challengeService.GetAllChallengesAsync();
+            Challenges = challenges
                 .Where(c => c.Status == ChallengeStatus.Open || c.Status == ChallengeStatus.Ongoing)
                 .OrderByDescending(c => c.CreatedAt)
-                .ToListAsync();
+                .ToList();
         }
 
         public async Task<IActionResult> OnPostAcceptAsync(int id)

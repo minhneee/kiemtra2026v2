@@ -1,24 +1,19 @@
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PickleballClubManagement.Services;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace PickleballClubManagement.Pages.Account
 {
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
         private readonly IMemberService _memberService;
 
-        public RegisterModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
-            IMemberService memberService)
+        public RegisterModel(IMemberService memberService)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
             _memberService = memberService;
         }
 
@@ -29,6 +24,11 @@ namespace PickleballClubManagement.Pages.Account
 
         public class InputModel
         {
+            [Required(ErrorMessage = "Vui lòng nhập tên đăng nhập")]
+            [StringLength(50, ErrorMessage = "Tên đăng nhập không được quá 50 ký tự")]
+            [Display(Name = "Tên đăng nhập")]
+            public string Username { get; set; } = string.Empty;
+
             [Required(ErrorMessage = "Vui lòng nhập họ tên")]
             [StringLength(100, ErrorMessage = "Họ tên không được quá 100 ký tự")]
             [Display(Name = "Họ và Tên")]
@@ -62,47 +62,61 @@ namespace PickleballClubManagement.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
-                var result = await _userManager.CreateAsync(user, Input.Password);
-
-                try
+                // Check if username already exists
+                if (InMemoryUserStore.UserExists(Input.Username))
                 {
-                    if (result.Succeeded)
+                    ModelState.AddModelError(string.Empty, "Tên đăng nhập này đã được sử dụng.");
+                    return Page();
+                }
+
+                // Register user in in-memory store
+                if (InMemoryUserStore.TryRegisterUser(Input.Username, Input.Password, Input.Email, Input.FullName))
+                {
+                    try
                     {
-                        // Add to Member role
-                        var roleResult = await _userManager.AddToRoleAsync(user, "Member");
-                        if (!roleResult.Succeeded)
+                        // Create member record with Rank 1.0 BEFORE signing in
+                        var member = await _memberService.CreateMemberAsync(Input.Username, Input.FullName);
+                        
+                        // Get user roles from store
+                        var userRoles = InMemoryUserStore.GetUserRoles(Input.Username);
+
+                        // Create claims principal
+                        var claims = new List<Claim>
                         {
-                            foreach (var error in roleResult.Errors)
-                            {
-                                ModelState.AddModelError(string.Empty, $"Lỗi Role: {error.Description}");
-                            }
-                            // Delete user if role assignment fails to keep clean state
-                            await _userManager.DeleteAsync(user);
-                            return Page();
+                            new Claim(ClaimTypes.NameIdentifier, Input.Username),
+                            new Claim(ClaimTypes.Name, Input.Username),
+                            new Claim(ClaimTypes.Email, Input.Email),
+                        };
+
+                        // Add role claims
+                        foreach (var role in userRoles)
+                        {
+                            claims.Add(new Claim(ClaimTypes.Role, role));
                         }
 
-                        // Create member record with Rank 1.0
-                        await _memberService.CreateMemberAsync(user.Id, Input.FullName);
+                        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                        var authProperties = new AuthenticationProperties
+                        {
+                            IsPersistent = false,
+                            ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7)
+                        };
 
-                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        await HttpContext.SignInAsync(
+                            CookieAuthenticationDefaults.AuthenticationScheme,
+                            new ClaimsPrincipal(claimsIdentity),
+                            authProperties);
+
                         return LocalRedirect(returnUrl);
                     }
-
-                    foreach (var error in result.Errors)
+                    catch (Exception ex)
                     {
-                        ModelState.AddModelError(string.Empty, error.Description);
+                        ModelState.AddModelError(string.Empty, $"Lỗi khi tạo thông tin thành viên: {ex.Message}");
+                        return Page();
                     }
                 }
-                catch (Exception ex)
+                else
                 {
-                    ModelState.AddModelError(string.Empty, $"Lỗi hệ thống: {ex.Message}");
-                    // Clean up if user was created but member creation failed
-                    var createdUser = await _userManager.FindByEmailAsync(Input.Email);
-                    if (createdUser != null)
-                    {
-                         await _userManager.DeleteAsync(createdUser);
-                    }
+                    ModelState.AddModelError(string.Empty, "Lỗi khi đăng ký. Vui lòng thử lại.");
                 }
             }
 

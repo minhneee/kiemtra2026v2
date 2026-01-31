@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using PickleballClubManagement.Models;
 using PickleballClubManagement.Services;
 using System.ComponentModel.DataAnnotations;
@@ -14,16 +13,13 @@ namespace PickleballClubManagement.Pages.Bookings
     {
         private readonly IBookingService _bookingService;
         private readonly IMemberService _memberService;
-        private readonly PickleballClubManagement.Data.ApplicationDbContext _context;
 
         public CreateModel(
             IBookingService bookingService, 
-            IMemberService memberService,
-            PickleballClubManagement.Data.ApplicationDbContext context)
+            IMemberService memberService)
         {
             _bookingService = bookingService;
             _memberService = memberService;
-            _context = context;
         }
 
         [BindProperty]
@@ -51,7 +47,7 @@ namespace PickleballClubManagement.Pages.Bookings
 
         public async Task OnGetAsync()
         {
-            Courts = await _context.Courts.Where(c => c.IsActive).ToListAsync();
+            Courts = InMemoryDataStore.GetCourts().Where(c => c.IsActive).ToList();
             TodayBookings = await _bookingService.GetBookingsByDateAsync(DateTime.Now);
             
             // Set default times
@@ -67,7 +63,7 @@ namespace PickleballClubManagement.Pages.Bookings
 
         public async Task<IActionResult> OnPostAsync()
         {
-            Courts = await _context.Courts.Where(c => c.IsActive).ToListAsync();
+            Courts = InMemoryDataStore.GetCourts().Where(c => c.IsActive).ToList();
             TodayBookings = await _bookingService.GetBookingsByDateAsync(Input.Date);
             
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

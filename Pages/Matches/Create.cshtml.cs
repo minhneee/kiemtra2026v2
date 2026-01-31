@@ -45,6 +45,19 @@ namespace PickleballClubManagement.Pages.Matches
             public int? Loser2Id { get; set; }
 
             public bool IsRanked { get; set; } = true;
+
+            // Score/Sets
+            [Required(ErrorMessage = "Vui lòng nhập tỷ số")]
+            public int Set1WinnerScore { get; set; }
+
+            [Required(ErrorMessage = "Vui lòng nhập tỷ số")]
+            public int Set1LoserScore { get; set; }
+
+            public int? Set2WinnerScore { get; set; }
+            public int? Set2LoserScore { get; set; }
+
+            public int? Set3WinnerScore { get; set; }
+            public int? Set3LoserScore { get; set; }
         }
 
         public async Task OnGetAsync()
@@ -92,6 +105,22 @@ namespace PickleballClubManagement.Pages.Matches
                 return Page();
             }
 
+            // Build sets list
+            var sets = new List<(int winnerScore, int loserScore)>
+            {
+                (Input.Set1WinnerScore, Input.Set1LoserScore)
+            };
+
+            if (Input.Set2WinnerScore.HasValue && Input.Set2LoserScore.HasValue)
+            {
+                sets.Add((Input.Set2WinnerScore.Value, Input.Set2LoserScore.Value));
+            }
+
+            if (Input.Set3WinnerScore.HasValue && Input.Set3LoserScore.HasValue)
+            {
+                sets.Add((Input.Set3WinnerScore.Value, Input.Set3LoserScore.Value));
+            }
+
             // Create match
             await _matchService.CreateMatchAsync(
                 Input.ChallengeId,
@@ -100,7 +129,8 @@ namespace PickleballClubManagement.Pages.Matches
                 Input.Winner2Id,
                 Input.Loser1Id,
                 Input.Loser2Id,
-                Input.IsRanked
+                Input.IsRanked,
+                sets
             );
 
             TempData["SuccessMessage"] = "Ghi nhận kết quả thành công!";

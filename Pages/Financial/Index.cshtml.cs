@@ -1,21 +1,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using PickleballClubManagement.Data;
 using PickleballClubManagement.Models;
+using PickleballClubManagement.Services;
 
 namespace PickleballClubManagement.Pages.Financial
 {
     [Authorize(Roles = "Admin")]
     public class IndexModel : PageModel
     {
-        private readonly ApplicationDbContext _context;
-
-        public IndexModel(ApplicationDbContext context)
-        {
-            _context = context;
-        }
-
         public List<Transaction> Transactions { get; set; } = new();
         public decimal TotalIncome { get; set; }
         public decimal TotalExpense { get; set; }
@@ -23,10 +15,15 @@ namespace PickleballClubManagement.Pages.Financial
 
         public async Task OnGetAsync()
         {
-            Transactions = await _context.Transactions
-                .Include(t => t.Category)
+            Transactions = InMemoryDataStore.GetTransactions()
                 .OrderByDescending(t => t.Date)
-                .ToListAsync();
+                .ToList();
+
+            // Populate categories for each transaction
+            foreach (var transaction in Transactions)
+            {
+                transaction.Category = InMemoryDataStore.GetTransactionCategoryById(transaction.CategoryId);
+            }
 
             TotalIncome = Transactions
                 .Where(t => t.Category?.Type == TransactionType.Income)
@@ -37,6 +34,7 @@ namespace PickleballClubManagement.Pages.Financial
                 .Sum(t => t.Amount);
 
             CurrentBalance = TotalIncome - TotalExpense;
+            await Task.CompletedTask;
         }
     }
 }

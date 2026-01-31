@@ -242,6 +242,22 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTWF0Y2hlc1xIaXN0b3J5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Admin/RiderProjects/kiemtra2026v2/Pages/News/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTmV3c1xDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Admin/RiderProjects/kiemtra2026v2/Pages/News/Detail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTmV3c1xEZXRhaWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Admin/RiderProjects/kiemtra2026v2/Pages/News/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTmV3c1xFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Admin/RiderProjects/kiemtra2026v2/Pages/News/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTmV3c1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Admin/RiderProjects/kiemtra2026v2/Pages/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJpdmFjeS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 

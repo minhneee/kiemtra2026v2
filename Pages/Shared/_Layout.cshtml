@@ -178,6 +178,7 @@
                 @if (User.Identity?.IsAuthenticated == true)
                 {
                     <div class="nav-section">
+                        <a href="/News" class="nav-link">📰 Tin Tức</a>
                         @if (User.IsInRole("Admin"))
                         {
                             <a href="/Matches/Create" class="nav-link">⚖️ Nhập Kết Quả</a>
