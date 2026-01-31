@@ -160,6 +160,17 @@ namespace PickleballClubManagement.Services
             }
         }
 
+        public static bool DeleteChallenge(int id)
+        {
+            var challenge = _challenges.FirstOrDefault(c => c.Id == id);
+            if (challenge != null)
+            {
+                _challenges.Remove(challenge);
+                return true;
+            }
+            return false;
+        }
+
         // Match operations
         public static List<Match> GetMatches() => new(_matches);
         

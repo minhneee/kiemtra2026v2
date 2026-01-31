@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PickleballClubManagement")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8b670e85abd195c3cf04c8389cc96e490a05c61b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+679bf0eadc92c50b1b89899496ce8ffcfac259f8")]
 [assembly: System.Reflection.AssemblyProductAttribute("PickleballClubManagement")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PickleballClubManagement")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

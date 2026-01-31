@@ -1,4 +1,5 @@
-# Pickleball Club Management System
+# Pickleball Club Management System v2
+
 
 Hệ thống quản lý câu lạc bộ Pickleball - Vợt Thủ Phố Núi
 

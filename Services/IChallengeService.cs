@@ -11,5 +11,9 @@ namespace PickleballClubManagement.Services
         Task<Challenge> CreateAdvancedChallengeAsync(int creatorId, string title, string description, ChallengeType type, GameMode mode, decimal entryFee, decimal prizePool, int targetWins);
         Task<bool> AcceptChallengeAsync(int challengeId);
         Task<Challenge?> GetChallengeByIdAsync(int id);
+        Task<Challenge> CreateChallengeAsync(Challenge challenge);
+        Task<Challenge?> UpdateChallengeAsync(int id, Challenge challenge);
+        Task<bool> DeleteChallengeAsync(int id);
+        Task<bool> JoinChallengeAsync(int challengeId, int memberId);
     }
 }

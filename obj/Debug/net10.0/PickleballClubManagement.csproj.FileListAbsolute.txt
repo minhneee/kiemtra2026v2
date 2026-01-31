@@ -1214,3 +1214,7 @@ C:\Users\Admin\RiderProjects\kiemtra2026v2\obj\Debug\net10.0\PickleballClubManag
 C:\Users\Admin\RiderProjects\kiemtra2026v2\obj\Debug\net10.0\ref\PickleballClubManagement.dll
 C:\Users\Admin\RiderProjects\kiemtra2026v2\obj\Debug\net10.0\PickleballClubManagement.sourcelink.json
 C:\Users\Admin\RiderProjects\kiemtra2026v2\obj\Debug\net10.0\compressed\wxjmt6lb9z-{0}-7e80ma5vyy-7e80ma5vyy.gz
+C:\Users\Admin\RiderProjects\kiemtra2026v2\bin\Debug\net10.0\Microsoft.OpenApi.dll
+C:\Users\Admin\RiderProjects\kiemtra2026v2\bin\Debug\net10.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\Admin\RiderProjects\kiemtra2026v2\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\Admin\RiderProjects\kiemtra2026v2\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerUI.dll
